@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, googleProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, User } from '../lib/firebase';
+import { auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, User } from '../lib/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -18,20 +18,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Handle redirect result
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) {
-          console.log("Redirect sign-in successful");
-        }
-      })
-      .catch((err) => {
-        console.error("Redirect sign-in error", err);
-        setError(err.message || "Failed to sign in with Google");
-      });
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
     });
     return unsubscribe;
@@ -40,11 +28,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async () => {
     setError(null);
     try {
-      // Using redirect instead of popup for better compatibility
-      await signInWithRedirect(auth, googleProvider);
+      await signInWithPopup(auth, googleProvider);
     } catch (err: any) {
       console.error("Login failed", err);
-      setError(err.message || "Failed to initiate sign-in");
+      // Don't show error if user simply closed the popup
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+        setError(err.message || 'Failed to sign in with Google. Please try again.');
+      }
     }
   };
 
@@ -53,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth);
     } catch (err: any) {
       console.error("Logout failed", err);
-      setError(err.message || "Failed to sign out");
+      setError(err.message || 'Failed to sign out.');
     }
   };
 
