@@ -19,8 +19,8 @@ export default function Profile() {
     setSigningIn(true);
     try {
       await login();
-      // For redirect, we might not reach this line as page reloads
-    } catch (err) {
+    } finally {
+      // Always reset loading state whether login succeeded, failed, or popup was closed
       setSigningIn(false);
     }
   };
