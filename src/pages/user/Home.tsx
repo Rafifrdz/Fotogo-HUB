@@ -39,15 +39,15 @@ export default function Home() {
           <h2 className="text-lg font-bold">Memory Today</h2>
           <button className="text-primary text-sm font-semibold">See All</button>
         </div>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative h-64 rounded-2xl overflow-hidden shadow-xl group"
         >
-          <img 
-            src={MOCK_SESSIONS[0].imageUrl} 
-            alt="Memory" 
+          <img
+            src={MOCK_SESSIONS[0].imageUrl}
+            alt="Memory"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             referrerPolicy="no-referrer"
           />
@@ -93,10 +93,10 @@ export default function Home() {
           <h2 className="text-lg font-bold">Nearby Booths</h2>
           <Link to="/explore" className="text-primary text-sm font-semibold">View Map</Link>
         </div>
-        
+
         <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 no-scrollbar">
           {MOCK_BOOTHS.map((booth) => (
-            <motion.div 
+            <motion.div
               key={booth.id}
               whileHover={{ y: -5 }}
               className="min-w-[240px] bg-white rounded-2xl overflow-hidden shadow-md border border-gray-100"
@@ -132,7 +132,7 @@ export default function Home() {
       {/* Promo Banner */}
       <section className="bg-gradient-to-r from-primary to-accent p-6 rounded-2xl text-white relative overflow-hidden">
         <div className="relative z-10 space-y-2">
-          <h3 className="text-xl font-bold leading-tight">New Frame Pack: <br/>Pastel Dreams 🌸</h3>
+          <h3 className="text-xl font-bold leading-tight">New Frame Pack: <br />Pastel Dreams 🌸</h3>
           <p className="text-white/80 text-xs">Available at all partner booths this weekend.</p>
           <button className="bg-white text-primary px-4 py-2 rounded-lg text-xs font-bold mt-2">Claim Now</button>
         </div>
@@ -142,5 +142,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+
   );
 }
