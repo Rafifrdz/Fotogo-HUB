@@ -17,8 +17,8 @@ export default function UserLayout() {
       {/* Desktop/Tablet Sidebar */}
       <aside className="hidden md:flex flex-col w-64 max-w-[250px] lg:w-72 h-screen sticky top-0 border-r border-gray-200 bg-white p-6 shadow-sm z-40">
         <div className="mb-10 flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg">
-            <img src="/pwa-192x192.png" alt="Logo" className="w-6 h-6" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+            <img src="/pwa-192x192.png" alt="Logo" className="w-full h-auto" />
           </div>
           <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">FotoGO HUB</span>
         </div>
