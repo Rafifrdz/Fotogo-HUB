@@ -1,0 +1,5 @@
+{
+  "name": "PhotoBooth Hub",
+  "description": "A centralized platform for photobooth memories, rewards, and partner management.",
+  "requestFramePermissions": ["camera", "geolocation"]
+}
