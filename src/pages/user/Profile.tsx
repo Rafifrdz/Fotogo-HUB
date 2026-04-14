@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { MOCK_USER } from '../../mockData';
 import { Settings, LogOut, ChevronRight, Bell, Shield, HelpCircle, CreditCard, Award, Camera, MapPin, LogIn } from 'lucide-react';
@@ -5,13 +6,24 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Profile() {
-  const { user, logout, login } = useAuth();
+  const { user, logout, login, error, clearError } = useAuth();
+  const [signingIn, setSigningIn] = useState(false);
   const menuItems = [
     { icon: CreditCard, label: 'Transaction History' },
     { icon: Bell, label: 'Notifications' },
     { icon: Shield, label: 'Privacy Settings' },
     { icon: HelpCircle, label: 'Help Center' },
   ];
+
+  const handleLogin = async () => {
+    setSigningIn(true);
+    try {
+      await login();
+      // For redirect, we might not reach this line as page reloads
+    } catch (err) {
+      setSigningIn(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -23,8 +35,25 @@ export default function Profile() {
           <h2 className="text-xl font-bold text-text-dark">Sign in Required</h2>
           <p className="text-text-secondary text-sm">Join PhotoBooth Hub to save your memories and custom frames.</p>
         </div>
-        <button onClick={login} className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2">
-          <LogIn size={20} /> Sign in with Google
+
+        {error && (
+          <div className="w-full p-4 bg-red-50 border border-red-100 rounded-2xl text-red-500 text-sm flex flex-col items-center gap-2">
+            <p>{error}</p>
+            <button onClick={clearError} className="text-xs font-bold underline">Try again</button>
+          </div>
+        )}
+
+        <button 
+          onClick={handleLogin} 
+          disabled={signingIn}
+          className={`w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 ${signingIn ? 'opacity-70 cursor-not-allowed' : ''}`}
+        >
+          {signingIn ? (
+            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : (
+            <LogIn size={20} />
+          )}
+          {signingIn ? 'Connecting to Google...' : 'Sign in with Google'}
         </button>
       </div>
     );
