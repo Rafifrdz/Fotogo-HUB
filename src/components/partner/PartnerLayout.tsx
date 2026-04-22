@@ -4,12 +4,12 @@ import { cn } from '../../lib/utils';
 
 export default function PartnerLayout() {
   const sidebarItems = [
-    { to: '/partner', icon: LayoutDashboard, label: 'Overview' },
-    { to: '/partner/upload', icon: Upload, label: 'Upload Session' },
-    { to: '/partner/customers', icon: Users, label: 'Customers' },
-    { to: '/partner/analytics', icon: BarChart3, label: 'Analytics' },
-    { to: '/partner/referral', icon: Share2, label: 'Referral' },
-    { to: '/partner/settings', icon: Settings, label: 'Settings' },
+    { to: '/mitrago', icon: LayoutDashboard, label: 'Overview' },
+    { to: '/mitrago/upload', icon: Upload, label: 'Upload Session' },
+    { to: '/mitrago/customers', icon: Users, label: 'Customers' },
+    { to: '/mitrago/analytics', icon: BarChart3, label: 'Analytics' },
+    { to: '/mitrago/referral', icon: Share2, label: 'Referral' },
+    { to: '/mitrago/settings', icon: Settings, label: 'Settings' },
   ];
 
   return (
@@ -19,10 +19,10 @@ export default function PartnerLayout() {
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-xl font-bold text-primary flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">PB</div>
-            Partner Hub
+            Mitra Go
           </h1>
         </div>
-        
+
         <nav className="flex-1 p-4 space-y-1">
           {sidebarItems.map((item) => (
             <NavLink
@@ -71,7 +71,7 @@ export default function PartnerLayout() {
             </button>
           </div>
         </header>
-        
+
         <div className="p-8">
           <Outlet />
         </div>

@@ -37,14 +37,14 @@ export default function App() {
           <Route path="queue/:boothId" element={<Queue />} />
         </Route>
 
-        {/* Partner Side Routes */}
-        <Route path="/partner" element={<PartnerLayout />}>
+        {/* Partner/Mitra Routes — accessible via /mitrago */}
+        <Route path="/mitrago" element={<PartnerLayout />}>
           <Route index element={<PartnerDashboard />} />
           <Route path="upload" element={<PartnerUpload />} />
           <Route path="analytics" element={<PartnerAnalytics />} />
-          <Route path="customers" element={<PartnerAnalytics />} /> {/* Placeholder */}
-          <Route path="referral" element={<PartnerAnalytics />} /> {/* Placeholder */}
-          <Route path="settings" element={<PartnerAnalytics />} /> {/* Placeholder */}
+          <Route path="customers" element={<PartnerAnalytics />} />
+          <Route path="referral" element={<PartnerAnalytics />} />
+          <Route path="settings" element={<PartnerAnalytics />} />
         </Route>
 
         {/* Fallback */}

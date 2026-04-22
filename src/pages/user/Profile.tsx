@@ -4,7 +4,7 @@ import { MOCK_USER } from '../../mockData';
 import {
   Settings, LogOut, ChevronRight, Bell, Shield,
   HelpCircle, CreditCard, Award, Camera, MapPin,
-  LogIn, Star, Users
+  LogIn, Star
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -215,20 +215,7 @@ export default function Profile() {
           </section>
         ))}
 
-        {/* Switch to Partner */}
-        <Link
-          to="/partner"
-          id="profile-partner-switch-btn"
-          className="flex items-center gap-3.5 bg-white px-4 py-4 rounded-2xl shadow-card"
-        >
-          <div className="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0">
-            <Users size={18} className="text-primary" />
-          </div>
-          <span className="flex-1 text-sm font-bold text-primary">Beralih ke Dashboard Mitra</span>
-          <ChevronRight size={16} className="text-text-muted" />
-        </Link>
 
-        {/* Logout */}
         <button
           id="profile-logout-btn"
           onClick={logout}

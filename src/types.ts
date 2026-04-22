@@ -58,6 +58,8 @@ export interface Booth {
   address: string;
   promo?: string;
   distance?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface UserProfile {

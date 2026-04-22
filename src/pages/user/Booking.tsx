@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Sparkles,
   User,
+  Users,
   Phone,
   ShieldCheck,
   Loader2,
@@ -226,52 +227,52 @@ export default function Booking() {
                   </div>
                 </div>
 
-                <div className="flex gap-4 overflow-x-auto px-6 pb-6 snap-x no-scrollbar">
+                <div className="flex gap-5 overflow-x-auto px-6 pt-6 pb-8 snap-x no-scrollbar">
                   {packages.map((pkg) => (
                     <button
                       key={pkg.id}
                       onClick={() => setSelectedPackage(pkg.id)}
                       className={cn(
-                        "flex-shrink-0 w-[260px] snap-start text-left p-5 rounded-[2rem] border-2 transition-all duration-300 relative group active:scale-[0.97]",
+                        "flex-shrink-0 w-[280px] snap-center text-left p-6 rounded-[2.5rem] border-2 transition-all duration-300 relative group active:scale-[0.98]",
                         selectedPackage === pkg.id
-                          ? "bg-white border-primary shadow-2xl shadow-primary/15"
+                          ? "bg-white border-primary shadow-[0_20px_50px_rgba(36,146,240,0.15)]"
                           : "bg-soft-gray border-transparent hover:border-gray-200"
                       )}
                     >
                       {pkg.popular && (
-                        <div className="absolute -top-3 left-6 px-3 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full flex items-center gap-1 shadow-lg shadow-amber-500/20">
-                          <Sparkles size={10} className="fill-white" />
-                          <span className="text-[9px] font-black uppercase tracking-tight">Best Seller</span>
+                        <div className="absolute -top-3.5 left-8 px-4 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-full flex items-center gap-1.5 shadow-lg shadow-amber-500/30 z-10">
+                          <Sparkles size={11} className="fill-white" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">Best Seller</span>
                         </div>
                       )}
 
-                      <div className="space-y-4">
+                      <div className="space-y-5">
                         <div className="flex justify-between items-start">
                           <div className={cn(
-                            "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+                            "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm",
                             selectedPackage === pkg.id ? "bg-primary text-white" : "bg-white text-text-secondary"
                           )}>
-                             {pkg.id === 'std' && <User size={20} />}
-                             {pkg.id === 'prm' && <Sparkles size={20} />}
-                             {pkg.id === 'grp' && <Clock size={20} />}
+                             {pkg.id === 'std' && <User size={24} />}
+                             {pkg.id === 'prm' && <Sparkles size={24} />}
+                             {pkg.id === 'grp' && <Users size={24} />}
                           </div>
                           {selectedPackage === pkg.id && (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="p-1 bg-primary rounded-full text-white">
-                              <CheckCircle2 size={16} />
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="p-1.5 bg-primary rounded-full text-white shadow-sm">
+                              <CheckCircle2 size={18} />
                             </motion.div>
                           )}
                         </div>
 
                         <div>
-                          <h3 className="font-bold text-text-dark">{pkg.name}</h3>
-                          <p className="text-lg font-black text-primary mt-0.5">{pkg.priceStr}</p>
+                          <h3 className="text-base font-bold text-text-dark">{pkg.name}</h3>
+                          <p className="text-2xl font-black text-primary mt-1 leading-none">{pkg.priceStr}</p>
                         </div>
 
-                        <div className="space-y-1.5 pt-2 border-t border-gray-100/50">
+                        <div className="space-y-2.5 pt-4 border-t border-gray-200/50">
                           {pkg.features.map((f, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-primary/30" />
-                              <span className="text-[10px] font-medium text-text-secondary">{f}</span>
+                            <div key={i} className="flex items-center gap-2.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+                              <span className="text-xs font-semibold text-text-secondary">{f}</span>
                             </div>
                           ))}
                         </div>

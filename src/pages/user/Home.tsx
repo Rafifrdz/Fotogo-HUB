@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { MOCK_SESSIONS, MOCK_BOOTHS, MOCK_USER } from '../../mockData';
+import { MOCK_SESSIONS, MOCK_USER } from '../../mockData';
 import {
   MapPin, Star, Camera, Grid2X2, Film, Sparkles,
   Gift, QrCode, Clock, ChevronRight, Coins, Search, User, Plus
@@ -7,6 +7,8 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useState, useEffect } from 'react';
+import { getBooths } from '../../lib/dataService';
+import type { Booth } from '../../types';
 
 // ── Service grid items ────────────────────────────────────────────────────────
 const SERVICES = [
@@ -28,10 +30,21 @@ const PROMO_BANNERS = [
 ];
 
 export default function Home() {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [activeBanner, setActiveBanner] = useState(0);
+  const [booths, setBooths] = useState<Booth[]>([]);
+  const [boothsLoading, setBoothsLoading] = useState(true);
 
+  // Load live booth data
+  useEffect(() => {
+    getBooths().then((data) => {
+      setBooths(data);
+      setBoothsLoading(false);
+    });
+  }, []);
+
+  // Auto-advance banner
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveBanner((prev) => (prev + 1) % PROMO_BANNERS.length);
@@ -93,11 +106,11 @@ export default function Home() {
 
           {/* Right: Quick Actions */}
           <div className="flex items-center gap-5">
-            <Link to="/scan" className="flex flex-col items-center gap-1.5 group">
+            <Link to="/explore" className="flex flex-col items-center gap-1.5 group" id="home-action-maps">
               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
-                <QrCode size={18} className="text-text-dark" />
+                <MapPin size={18} className="text-primary" />
               </div>
-              <span className="text-[10px] font-semibold text-text-secondary">Scan</span>
+              <span className="text-[10px] font-semibold text-text-secondary">Maps</span>
             </Link>
             <Link to="/referral" className="flex flex-col items-center gap-1.5 group">
               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
@@ -105,11 +118,11 @@ export default function Home() {
               </div>
               <span className="text-[10px] font-semibold text-text-secondary">Invite</span>
             </Link>
-            <Link to="/explore" className="flex flex-col items-center gap-1.5 group">
+            <Link to="/scan" className="flex flex-col items-center gap-1.5 group">
               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
-                <Grid2X2 size={18} className="text-text-dark" />
+                <QrCode size={18} className="text-text-dark" />
               </div>
-              <span className="text-[10px] font-semibold text-text-secondary">Explore</span>
+              <span className="text-[10px] font-semibold text-text-secondary">Scan</span>
             </Link>
           </div>
         </motion.div>
@@ -241,7 +254,11 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar px-5">
-            {MOCK_BOOTHS.map((booth, i) => (
+            {boothsLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="min-w-[160px] h-[160px] bg-border rounded-2xl flex-shrink-0 animate-pulse" />
+                ))
+              : booths.map((booth, i) => (
               <motion.div
                 key={booth.id}
                 initial={{ opacity: 0, y: 8 }}

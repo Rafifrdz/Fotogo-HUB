@@ -1,14 +1,36 @@
 import { motion } from 'motion/react';
 import { MOCK_SESSIONS } from '../../mockData';
 import { Search, Filter, Calendar, MapPin, Grid3X3, List, Download } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '../../lib/utils';
+import { useAuth } from '../../context/AuthContext';
+import { getMemoriesByUser } from '../../lib/dataService';
+import type { PhotoSession } from '../../types';
 
 const FILTERS = ['Semua', '2026', '2025', 'Bandung', 'Jakarta'];
 
 export default function Memories() {
+  const { user } = useAuth();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeFilter, setActiveFilter] = useState('Semua');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sessions, setSessions] = useState<PhotoSession[]>(MOCK_SESSIONS);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user?.uid) {
+      setLoading(true);
+      getMemoriesByUser(user.uid).then((data) => {
+        setSessions(data);
+        setLoading(false);
+      });
+    }
+  }, [user]);
+
+  const filtered = sessions.filter((s) =>
+    s.boothName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.location.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-soft-gray">
@@ -52,6 +74,8 @@ export default function Memories() {
               id="memories-search-input"
               type="text"
               placeholder="Cari booth, lokasi, atau tag..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-soft-gray rounded-2xl py-3 pl-11 pr-4 text-sm text-text-dark placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             />
           </div>
@@ -84,14 +108,21 @@ export default function Memories() {
       <div className="px-5 py-4">
         {/* Results count */}
         <p className="text-xs text-text-secondary font-medium mb-3">
-          Menampilkan {MOCK_SESSIONS.length} kenangan
+          {loading ? 'Memuat kenangan...' : `Menampilkan ${filtered.length} kenangan`}
         </p>
 
-        <div className={cn(
-          'grid gap-3',
-          viewMode === 'grid' ? 'grid-cols-2' : 'grid-cols-1'
-        )}>
-          {MOCK_SESSIONS.map((session, i) => (
+        <div className={cn('grid gap-3', viewMode === 'grid' ? 'grid-cols-2' : 'grid-cols-1')}>
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-card animate-pulse">
+                  <div className="aspect-[3/4] bg-border" />
+                  <div className="p-3 space-y-2">
+                    <div className="h-3 bg-border rounded w-2/3" />
+                    <div className="h-2 bg-border rounded w-1/2" />
+                  </div>
+                </div>
+              ))
+            : filtered.map((session, i) => (
             <motion.div
               key={session.id}
               initial={{ opacity: 0, scale: 0.96 }}

@@ -11,11 +11,7 @@ export default function Scan() {
   const { user, login } = useAuth();
   const { activeFrame } = useFrame();
   const [scanning, setScanning] = useState(true);
-  const [sessionActive, setSessionActive] = useState(false);
-  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [connected, setConnected] = useState(false);
   const navigate = useNavigate();
 
   // Step 1: Scan QR
@@ -23,94 +19,21 @@ export default function Scan() {
     if (scanning) {
       const timer = setTimeout(() => {
         setScanning(false);
-        setSessionActive(true);
-      }, 2500);
+        setConnected(true);
+      }, 2500); // Simulate network request
       return () => clearTimeout(timer);
     }
   }, [scanning]);
 
-  // Step 2: Start Camera Session
-  useEffect(() => {
-    if (sessionActive && !capturedPhoto) {
-      startCamera();
-    }
-    return () => stopCamera();
-  }, [sessionActive, capturedPhoto]);
-
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (err) {
-      console.error("Camera error", err);
-    }
-  };
-
-  const stopCamera = () => {
-    if (videoRef.current?.srcObject) {
-      const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
-      tracks.forEach(track => track.stop());
-    }
-  };
-
-  const takePhoto = () => {
-    if (!videoRef.current || !canvasRef.current || !activeFrame) return;
-    
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Set canvas to video dimensions
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    // Draw video frame
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Overlay active frame
-    const frameImg = new Image();
-    frameImg.crossOrigin = "anonymous";
-    frameImg.src = activeFrame.imageUrl;
-    frameImg.onload = () => {
-      ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
-      setCapturedPhoto(canvas.toDataURL('image/jpeg'));
-      stopCamera();
-    };
-  };
-
-  const saveToMemories = async () => {
-    if (!user || !capturedPhoto) {
-      if (!user) login();
-      return;
-    }
-    setSaving(true);
-    try {
-      await addDoc(collection(db, 'sessions'), {
-        userId: user.uid,
-        frameId: activeFrame?.id || 'default',
-        photoUrl: capturedPhoto, // In real app, upload to storage first
-        createdAt: new Date().toISOString()
-      });
-      navigate('/memories');
-    } catch (error) {
-      console.error("Save failed", error);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (!activeFrame && !capturedPhoto) {
+  if (!activeFrame) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-6 bg-white">
         <div className="w-20 h-20 bg-primary-light rounded-full flex items-center justify-center text-primary">
           <ImageIcon size={40} />
         </div>
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-text-dark">No Frame Selected</h2>
-          <p className="text-text-secondary text-sm">Please select a custom frame from your gallery before starting a session.</p>
+          <h2 className="text-xl font-bold text-text-dark">Belum Ada Frame Aktif</h2>
+          <p className="text-text-secondary text-sm">Pilih frame custom dari galeri Anda terlebih dahulu sebelum memindai mesin photobooth.</p>
         </div>
         <button 
           onClick={() => navigate('/frames')}
@@ -130,7 +53,7 @@ export default function Scan() {
           <X size={20} />
         </button>
         <h2 className="text-white font-bold">
-          {scanning ? "Scan Booth QR" : sessionActive && !capturedPhoto ? "Pose Now!" : "Result"}
+          {scanning ? "Scan QR Mesin" : "Terhubung"}
         </h2>
         <div className="w-10" />
       </header>
@@ -160,94 +83,47 @@ export default function Scan() {
               </div>
             </div>
             <div className="text-center space-y-2">
-              <p className="text-white font-bold text-lg">Scan Photobooth QR</p>
-              <p className="text-white/60 text-sm">Your selected frame <span className="text-primary font-bold">"{activeFrame?.name}"</span> will be applied automatically.</p>
+              <p className="text-white font-bold text-lg">Arahkan ke Layar Mesin</p>
+              <p className="text-white/60 text-sm">Frame <span className="text-primary font-bold">"{activeFrame?.name}"</span> akan otomatis dikirim ke mesin.</p>
             </div>
           </motion.div>
-        ) : sessionActive && !capturedPhoto ? (
+        ) : connected ? (
           <motion.div 
-            key="camera"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex-1 relative flex flex-col"
+            key="connected"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-8 relative z-20"
           >
-            {/* Camera Preview */}
-            <video 
-              ref={videoRef} 
-              autoPlay 
-              playsInline 
-              className="absolute inset-0 w-full h-full object-cover scale-x-[-1]"
-            />
-            
-            {/* Frame Overlay */}
-            {activeFrame && (
-              <img 
-                src={activeFrame.imageUrl} 
-                alt="Frame Overlay" 
-                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10"
-                referrerPolicy="no-referrer"
-              />
-            )}
-
-            {/* Controls */}
-            <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center gap-8 z-20">
-              <button className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white">
-                <Zap size={24} />
-              </button>
-              <button 
-                onClick={takePhoto}
-                className="w-20 h-20 bg-white rounded-full border-8 border-white/30 flex items-center justify-center shadow-2xl active:scale-90 transition-transform"
-              >
-                <div className="w-14 h-14 bg-primary rounded-full" />
-              </button>
-              <button className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white">
-                <RefreshCw size={24} />
-              </button>
-            </div>
-          </motion.div>
-        ) : capturedPhoto ? (
-          <motion.div 
-            key="result"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex-1 bg-white rounded-t-[3rem] p-8 space-y-8 relative z-20 mt-12 overflow-y-auto"
-          >
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center shadow-lg">
-                <CheckCircle2 size={48} />
-              </div>
-              <h2 className="text-2xl font-bold text-text-dark">Perfect Shot!</h2>
-            </div>
-
-            <div className="aspect-[3/4] bg-soft-gray rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-              <img src={capturedPhoto} alt="Result" className="w-full h-full object-cover" />
-            </div>
-
-            <div className="space-y-3">
-              <button 
-                onClick={saveToMemories}
-                disabled={saving}
-                className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2"
-              >
-                {saving ? "Saving..." : <><ImageIcon size={20} /> Save to Memories</>}
-              </button>
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => { setCapturedPhoto(null); setSessionActive(true); }}
-                  className="flex-1 bg-soft-gray text-text-dark py-4 rounded-2xl font-bold flex items-center justify-center gap-2"
-                >
-                  <RefreshCw size={20} /> Retake
-                </button>
-                <button className="flex-1 bg-soft-gray text-text-dark py-4 rounded-2xl font-bold flex items-center justify-center gap-2">
-                  <Share2 size={20} /> Share
-                </button>
+            <div className="relative">
+              <div className="absolute inset-0 bg-green-500 blur-2xl opacity-20 rounded-full" />
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl relative z-10 border-4 border-green-500">
+                <CheckCircle2 size={64} className="text-green-500" />
               </div>
             </div>
+
+            <div className="space-y-4 bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20">
+              <h2 className="text-3xl font-black text-white">Berhasil!</h2>
+              <p className="text-white/80 text-sm leading-relaxed">
+                Frame <span className="text-primary font-bold">"{activeFrame?.name}"</span> telah berhasil diterapkan ke mesin <strong>FotoGo Malang Center</strong>.
+              </p>
+              
+              <div className="bg-black/30 p-4 rounded-xl mt-4">
+                <p className="text-xs text-white/60 uppercase tracking-widest font-bold mb-2">Instruksi Selanjutnya</p>
+                <p className="text-white text-sm font-medium">
+                  Silakan lihat ke layar mesin dan tekan tombol <span className="bg-primary px-2 py-0.5 rounded text-white text-xs">Mulai Foto</span> di layar mesin.
+                </p>
+              </div>
+            </div>
+
+            <button 
+              onClick={() => navigate('/')}
+              className="w-full bg-white text-text-dark py-4 rounded-2xl font-bold shadow-lg mt-8 hover:bg-soft-gray transition-colors"
+            >
+              Kembali ke Beranda
+            </button>
           </motion.div>
         ) : null}
       </AnimatePresence>
-
-      <canvas ref={canvasRef} className="hidden" />
     </div>
   );
 }

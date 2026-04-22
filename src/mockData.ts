@@ -44,32 +44,38 @@ export const MOCK_SESSIONS: PhotoSession[] = [
 export const MOCK_BOOTHS: Booth[] = [
   {
     id: "b1",
-    name: "Braga Vibes",
+    name: "Braga Vibes Malang",
     rating: 4.8,
     price: "Rp 35.000",
     imageUrl: "https://picsum.photos/seed/booth1/400/300",
-    address: "Jl. Braga No. 123, Bandung",
+    address: "Jl. Soekarno Hatta No. 12, Malang",
     promo: "15% OFF Weekend",
-    distance: "0.8 km"
+    distance: "0.8 km",
+    latitude: -7.9431,
+    longitude: 112.6178
   },
   {
     id: "b2",
-    name: "Neo Tokyo",
+    name: "Neo Tokyo Araya",
     rating: 4.9,
     price: "Rp 45.000",
     imageUrl: "https://picsum.photos/seed/booth2/400/300",
-    address: "Sudirman Central, Jakarta",
+    address: "Plaza Araya, Malang",
     promo: "Free Print for 1st Visit",
-    distance: "2.5 km"
+    distance: "2.5 km",
+    latitude: -7.9405,
+    longitude: 112.6612
   },
   {
     id: "b3",
-    name: "Pastel Dream",
+    name: "Pastel Dream Ijen",
     rating: 4.7,
     price: "Rp 30.000",
     imageUrl: "https://picsum.photos/seed/booth3/400/300",
-    address: "Paris Van Java, Bandung",
-    distance: "1.2 km"
+    address: "Jl. Ijen No. 45, Malang",
+    distance: "1.2 km",
+    latitude: -7.9675,
+    longitude: 112.6216
   }
 ];
 

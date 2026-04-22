@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Image as ImageIcon, QrCode, Layers, User } from 'lucide-react';
+import { Home, Image as ImageIcon, MapPin, Layers, User } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
@@ -11,7 +11,7 @@ export default function UserLayout() {
   const navItems = [
     { to: '/', icon: Home, label: 'Home', exact: true },
     { to: '/memories', icon: ImageIcon, label: 'Galeri' },
-    { to: '/scan', icon: QrCode, label: 'Scan', isCenter: true },
+    { to: '/explore', icon: MapPin, label: 'Maps', isCenter: true },
     { to: '/frames', icon: Layers, label: 'Frame' },
     { to: '/profile', icon: User, label: 'Profil' },
   ];
@@ -62,7 +62,7 @@ export default function UserLayout() {
                 <span>{item.label}</span>
                 {item.isCenter && (
                   <span className="ml-auto text-[10px] font-bold bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wide">
-                    Scan
+                    Maps
                   </span>
                 )}
               </NavLink>
@@ -94,8 +94,8 @@ export default function UserLayout() {
             if (item.isCenter) {
               return (
                 <NavLink
-                  key={item.to}
-                  to={item.to}
+                  to="/explore"
+                  state={{ defaultView: 'map' }}
                   className="relative flex flex-col items-center -translate-y-4"
                 >
                   {/* Outer glow ring */}
@@ -107,7 +107,7 @@ export default function UserLayout() {
                   <div className="w-14 h-14 hero-gradient rounded-full flex items-center justify-center shadow-primary relative z-10">
                     <item.icon size={26} className="text-white" strokeWidth={2.2} />
                   </div>
-                  <span className="text-[10px] font-semibold text-primary mt-1.5">Scan</span>
+                  <span className="text-[10px] font-semibold text-primary mt-1.5">Maps</span>
                 </NavLink>
               );
             }
