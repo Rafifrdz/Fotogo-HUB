@@ -1,20 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #4F8CFF;
-  --color-primary-dark: #2F5FD0;
-  --color-primary-light: #EAF3FF;
-  --color-accent: #7DB8FF;
-  --color-text-dark: #1F2A44;
-  --color-text-secondary: #6B7A99;
-  --color-soft-gray: #F5F7FA;
+  /* FotoGo Brand Palette */
+  --color-primary: #2492F0;
+  --color-primary-dark: #1270CC;
+  --color-primary-light: #E8F4FE;
+  --color-accent: #FF6B6B;
+  --color-accent-warm: #FF9F43;
+  --color-gold: #F6C90E;
 
-  --radius-xl: 1rem;
+  /* Text */
+  --color-text-dark: #1A1A2E;
+  --color-text-secondary: #6B7080;
+  --color-text-muted: #A0A8B8;
+
+  /* Surfaces */
+  --color-soft-gray: #F4F5F9;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F8F9FE;
+
+  /* Border */
+  --color-border: #E8EAF2;
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
   --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 }
 
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
   body {
-    @apply bg-white text-text-dark font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--color-soft-gray);
+    color: var(--color-text-dark);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  /* Gojek-style glassmorphism */
+  .glass {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  /* FotoGo solid theme — no more gradients */
+  .hero-gradient {
+    background-color: var(--color-primary);
+  }
+
+  .hero-gradient-warm {
+    background-color: #A0D2FF; /* A softer, pastel version of the blue */
+  }
+
+  /* Card shadow system identical to Gojek */
+  .shadow-card {
+    box-shadow: 0 2px 12px rgba(36, 146, 240, 0.08), 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .shadow-card-hover {
+    box-shadow: 0 8px 32px rgba(36, 146, 240, 0.18), 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .shadow-bottom-nav {
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08), 0 -1px 4px rgba(0,0,0,0.04);
+  }
+
+  .shadow-primary {
+    box-shadow: 0 8px 24px rgba(36, 146, 240, 0.35);
   }
 }

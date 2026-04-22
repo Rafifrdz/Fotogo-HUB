@@ -5,90 +5,218 @@
       "description": "Photographer settings and status",
       "type": "object",
       "properties": {
-        "boothId": { "type": "string" },
-        "status": { "type": "string", "enum": ["available", "busy", "pause"] },
-        "capacityPerSession": { "type": "number" },
-        "averageSessionMinutes": { "type": "number" },
-        "packages": { 
+        "boothId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "available",
+            "busy",
+            "pause"
+          ]
+        },
+        "capacityPerSession": {
+          "type": "number"
+        },
+        "averageSessionMinutes": {
+          "type": "number"
+        },
+        "packages": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "name": { "type": "string" },
-              "price": { "type": "number" }
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              }
             }
           }
         }
       },
-      "required": ["boothId", "status", "capacityPerSession"]
+      "required": [
+        "boothId",
+        "status",
+        "capacityPerSession"
+      ]
     },
     "Booking": {
       "title": "Booking",
-      "description": "Scheduled photobooth sessions",
+      "description": "Scheduled photobzooth sessions",
       "type": "object",
       "properties": {
-        "userId": { "type": "string" },
-        "boothId": { "type": "string" },
-        "startTime": { "type": "string", "format": "date-time" },
-        "endTime": { "type": "string", "format": "date-time" },
-        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "cancelled"] },
-        "package": { "type": "string" },
-        "price": { "type": "number" }
+        "userId": {
+          "type": "string"
+        },
+        "boothId": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "confirmed",
+            "completed",
+            "cancelled"
+          ]
+        },
+        "package": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
       },
-      "required": ["userId", "boothId", "startTime", "status"]
+      "required": [
+        "userId",
+        "boothId",
+        "startTime",
+        "status"
+      ]
     },
     "QueueEntry": {
       "title": "QueueEntry",
       "description": "Real-time queue for walk-ins",
       "type": "object",
       "properties": {
-        "userId": { "type": "string" },
-        "boothId": { "type": "string" },
-        "position": { "type": "number" },
-        "estimatedWaitMinutes": { "type": "number" },
-        "status": { "type": "string", "enum": ["waiting", "called", "completed", "no-show"] },
-        "joinedAt": { "type": "string", "format": "date-time" }
+        "userId": {
+          "type": "string"
+        },
+        "boothId": {
+          "type": "string"
+        },
+        "position": {
+          "type": "number"
+        },
+        "estimatedWaitMinutes": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "waiting",
+            "called",
+            "completed",
+            "no-show"
+          ]
+        },
+        "joinedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
-      "required": ["userId", "boothId", "position", "status", "joinedAt"]
+      "required": [
+        "userId",
+        "boothId",
+        "position",
+        "status",
+        "joinedAt"
+      ]
     },
     "Transaction": {
       "title": "Transaction",
       "description": "Record of online and offline payments",
       "type": "object",
       "properties": {
-        "boothId": { "type": "string" },
-        "userId": { "type": "string" },
-        "amount": { "type": "number" },
-        "type": { "type": "string", "enum": ["online", "offline"] },
-        "package": { "type": "string" },
-        "commission": { "type": "number" },
-        "createdAt": { "type": "string", "format": "date-time" }
+        "boothId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "online",
+            "offline"
+          ]
+        },
+        "package": {
+          "type": "string"
+        },
+        "commission": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
-      "required": ["boothId", "amount", "type", "createdAt"]
+      "required": [
+        "boothId",
+        "amount",
+        "type",
+        "createdAt"
+      ]
     },
     "UserFrame": {
       "title": "UserFrame",
       "description": "Custom frames uploaded by users",
       "type": "object",
       "properties": {
-        "userId": { "type": "string", "description": "UID of the owner" },
-        "name": { "type": "string", "description": "Name of the frame template" },
-        "imageUrl": { "type": "string", "description": "URL of the frame image in storage" },
-        "createdAt": { "type": "string", "format": "date-time", "description": "Upload timestamp" }
+        "userId": {
+          "type": "string",
+          "description": "UID of the owner"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the frame template"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the frame image in storage"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Upload timestamp"
+        }
       },
-      "required": ["userId", "name", "imageUrl", "createdAt"]
+      "required": [
+        "userId",
+        "name",
+        "imageUrl",
+        "createdAt"
+      ]
     },
     "UserSession": {
       "title": "UserSession",
       "description": "Photobooth sessions with custom frames",
       "type": "object",
       "properties": {
-        "userId": { "type": "string" },
-        "frameId": { "type": "string" },
-        "photoUrl": { "type": "string" },
-        "createdAt": { "type": "string", "format": "date-time" }
+        "userId": {
+          "type": "string"
+        },
+        "frameId": {
+          "type": "string"
+        },
+        "photoUrl": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
-      "required": ["userId", "photoUrl", "createdAt"]
+      "required": [
+        "userId",
+        "photoUrl",
+        "createdAt"
+      ]
     }
   },
   "firestore": {
