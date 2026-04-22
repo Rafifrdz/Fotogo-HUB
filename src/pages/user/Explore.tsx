@@ -1,5 +1,5 @@
-import { motion } from 'motion/react';
-import { MapPin, Star, Search, Navigation, List, Map as MapIcon, Clock, Users, AlertCircle, SlidersHorizontal, Crosshair } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { MapPin, Star, Search, Navigation, List, Map as MapIcon, Clock, Users, AlertCircle, SlidersHorizontal, Crosshair, Phone, Share2, Heart, Info, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '../../lib/utils';
 import { Link, useLocation } from 'react-router-dom';
@@ -343,85 +343,138 @@ export default function Explore() {
                       key={booth.id}
                       position={{ lat: booth.latitude, lng: booth.longitude }}
                       onClick={() => setSelectedBooth(booth)}
+                      zIndex={selectedBooth?.id === booth.id ? 10 : 1}
                     >
-                      <Pin
-                        background={selectedBooth?.id === booth.id ? '#1d4ed8' : '#2492F0'}
-                        glyphColor={'#fff'}
-                        borderColor={'#fff'}
-                        scale={selectedBooth?.id === booth.id ? 1.2 : 1}
-                      />
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        whileHover={{ scale: 1.15 }}
+                        className="relative flex flex-col items-center group cursor-pointer"
+                      >
+                        {/* Floating Image Marker (No Pin Shape) */}
+                        <div className={cn(
+                          "relative w-12 h-12 rounded-full border-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] overflow-hidden transition-all duration-300",
+                          selectedBooth?.id === booth.id ? "border-primary scale-125 ring-4 ring-primary/20" : "border-white"
+                        )}>
+                          <img 
+                            src={booth.imageUrl} 
+                            alt={booth.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Price Badge on Selection */}
+                        <motion.div 
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ 
+                            opacity: (selectedBooth?.id === booth.id) ? 1 : 0,
+                            y: (selectedBooth?.id === booth.id) ? -8 : 5
+                          }}
+                          className="absolute -top-8 whitespace-nowrap bg-primary text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg pointer-events-none"
+                        >
+                          {booth.price}
+                        </motion.div>
+                      </motion.div>
                     </AdvancedMarker>
                   )
                 ))}
+              </Map>
 
-                {selectedBooth && selectedBooth.latitude && selectedBooth.longitude && (
-                  <InfoWindow
-                    position={{ lat: selectedBooth.latitude, lng: selectedBooth.longitude }}
-                    onCloseClick={() => setSelectedBooth(null)}
+              {/* Mobile Style Bottom Sheet (Google Maps Style) */}
+              <AnimatePresence>
+                {selectedBooth && !isNavigating && (
+                  <motion.div
+                    initial={{ y: '100%' }}
+                    animate={{ y: 0 }}
+                    exit={{ y: '100%' }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    className="fixed bottom-0 left-0 right-0 z-[100] md:absolute md:bottom-6 md:left-1/2 md:-translate-x-1/2 md:w-[400px]"
                   >
-                    <div className="w-[252px] font-sans">
-                      <div className="bg-white rounded-[22px] overflow-hidden border border-border shadow-[0_12px_40px_rgba(16,24,40,0.10)]">
-                        {/* Media */}
-                        <div className="relative">
-                          <img
-                            src={selectedBooth.imageUrl}
-                            alt={selectedBooth.name}
-                            className="w-full h-32 object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
+                    <div className="bg-white rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_40px_rgba(0,0,0,0.12)] border-t border-white overflow-hidden pb-safe">
+                      {/* Drag Handle */}
+                      <div className="flex justify-center pt-3 pb-1">
+                        <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
+                      </div>
 
-                          {selectedBooth.promo && (
-                            <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-text-dark text-[9px] font-extrabold px-2.5 py-1 rounded-full border border-white shadow-sm">
-                              PROMO
+                      {/* Content Container */}
+                      <div className="px-5 pb-6">
+                        {/* Header Info */}
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex-1 min-w-0 pr-4">
+                            <h2 className="text-xl font-black text-text-dark leading-tight mb-1">{selectedBooth.name}</h2>
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="flex items-center gap-1 bg-amber-50 text-amber-700 px-2 py-0.5 rounded-lg">
+                                <Star size={12} className="fill-amber-500 text-amber-500" />
+                                <span className="text-xs font-black">{selectedBooth.rating}</span>
+                              </div>
+                              <span className="text-xs font-semibold text-text-secondary">{selectedBooth.distance} dari sini</span>
+                              <span className="w-1 h-1 rounded-full bg-gray-300" />
+                              <span className="text-xs font-bold text-primary">{selectedBooth.price}</span>
                             </div>
-                          )}
-
-                          {/* Price pill */}
-                          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm border border-white/80">
-                            <span className="text-[11px] font-black text-primary">{selectedBooth.price}</span>
+                            <div className="flex items-center gap-1.5 text-text-secondary">
+                              <MapPin size={14} className="flex-shrink-0" />
+                              <p className="text-xs truncate font-medium">{selectedBooth.address}</p>
+                            </div>
+                          </div>
+                          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex-shrink-0">
+                            <img src={selectedBooth.imageUrl} alt={selectedBooth.name} className="w-full h-full object-cover" />
                           </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="p-4">
-                          <h3 className="font-black text-[15px] text-text-dark leading-snug tracking-tight line-clamp-2">
-                            {selectedBooth.name}
-                          </h3>
-
-                          <div className="flex items-center justify-between mt-2">
-                            <div className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">
-                              <Star size={12} className="fill-amber-500 text-amber-500" />
-                              <span className="text-[11px] font-extrabold">{selectedBooth.rating}</span>
-                              <span className="text-[10px] font-semibold text-amber-700/70">(120+)</span>
+                        {/* Action Buttons Row - The "Google Maps" Navigation Bar */}
+                        <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-5 px-5 mb-6">
+                          <button 
+                            onClick={startNavigation}
+                            className="flex flex-col items-center gap-1.5 min-w-[72px]"
+                          >
+                            <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-primary">
+                              <Navigation size={22} className="fill-white" />
                             </div>
-                            {selectedBooth.distance && (
-                              <span className="text-[11px] font-semibold text-text-secondary">
-                                {selectedBooth.distance}
-                              </span>
-                            )}
-                          </div>
+                            <span className="text-[11px] font-bold text-primary">Rute</span>
+                          </button>
+                          
+                          <button className="flex flex-col items-center gap-1.5 min-w-[72px]">
+                            <div className="w-12 h-12 rounded-full bg-soft-gray flex items-center justify-center text-text-dark">
+                              <Heart size={20} />
+                            </div>
+                            <span className="text-[11px] font-bold text-text-secondary">Simpan</span>
+                          </button>
 
-                          <div className="mt-3 grid grid-cols-2 gap-2">
-                            <button
-                              onClick={startNavigation}
-                              className="h-11 rounded-2xl bg-white border border-primary/25 text-primary font-extrabold text-[12px] shadow-card hover:bg-primary/5 transition-colors active:scale-[0.98] flex items-center justify-center gap-1.5"
-                            >
-                              <Navigation size={14} />
-                              Navigasi
-                            </button>
-                            <Link
-                              to={`/booking/${selectedBooth.id}`}
-                              className="h-11 rounded-2xl bg-primary text-white font-extrabold text-[12px] shadow-card hover:bg-primary-dark transition-colors active:scale-[0.98] flex items-center justify-center"
-                            >
-                              Booking
-                            </Link>
-                          </div>
+                          <button className="flex flex-col items-center gap-1.5 min-w-[72px]">
+                            <div className="w-12 h-12 rounded-full bg-soft-gray flex items-center justify-center text-text-dark">
+                              <Share2 size={20} />
+                            </div>
+                            <span className="text-[11px] font-bold text-text-secondary">Bagikan</span>
+                          </button>
+
+                          <button className="flex flex-col items-center gap-1.5 min-w-[72px]">
+                            <div className="w-12 h-12 rounded-full bg-soft-gray flex items-center justify-center text-text-dark">
+                              <Phone size={20} />
+                            </div>
+                            <span className="text-[11px] font-bold text-text-secondary">Telepon</span>
+                          </button>
+
+                          <button className="flex flex-col items-center gap-1.5 min-w-[72px]">
+                            <div className="w-12 h-12 rounded-full bg-soft-gray flex items-center justify-center text-text-dark">
+                              <Info size={20} />
+                            </div>
+                            <span className="text-[11px] font-bold text-text-secondary">Info</span>
+                          </button>
                         </div>
+
+                        {/* Main CTA */}
+                        <Link
+                          to={`/booking/${selectedBooth.id}`}
+                          className="w-full bg-primary text-white py-4 rounded-2xl font-black text-base flex items-center justify-center gap-2 shadow-primary active:scale-[0.98] transition-all"
+                        >
+                          Booking Sekarang
+                          <ChevronRight size={20} />
+                        </Link>
                       </div>
                     </div>
-                  </InfoWindow>
+                  </motion.div>
                 )}
-              </Map>
+              </AnimatePresence>
               
               {/* Directions Component */}
               {isNavigating && selectedBooth && userLocation && selectedBooth.latitude && selectedBooth.longitude && (
@@ -432,11 +485,14 @@ export default function Explore() {
                 />
               )}
               
-              {/* GPS Locate Button (Sembunyikan jika sedang navigasi) */}
+              {/* GPS Locate Button (Sembunyikan jika sedang navigasi atau ada booth terpilih di mobile) */}
               {!isNavigating && (
                 <button
                   onClick={getUserLocation}
-                  className="absolute bottom-6 right-5 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-soft-gray transition-all active:scale-90 border border-gray-100 z-10"
+                  className={cn(
+                    "absolute bottom-6 right-5 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-soft-gray transition-all active:scale-90 border border-gray-100 z-10",
+                    selectedBooth ? "bottom-[320px] md:bottom-6" : "bottom-6"
+                  )}
                 >
                   {isLocating ? (
                     <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
