@@ -12,9 +12,7 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        devOptions: {
-          enabled: true
-        },
+        devOptions: { enabled: true },
         manifest: {
           name: 'Photobooth Hub',
           short_name: 'Photobooth',
@@ -23,19 +21,55 @@ export default defineConfig(({mode}) => {
           background_color: '#ffffff',
           display: 'standalone',
           icons: [
-            {
-              src: '/pwa-192x192.png',
-              sizes: '192x192',
-              type: 'image/png'
-            },
-            {
-              src: '/pwa-512x512.png',
-              sizes: '512x512',
-              type: 'image/png'
-            }
+            { src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+            { src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png' }
           ]
         }
-      })
+      }),
+      // SECURE PROXY PLUGIN
+      {
+        name: 'pakasir-proxy',
+        configureServer(server) {
+          server.middlewares.use(async (req, res, next) => {
+            if (req.url?.startsWith('/pakasir-api/')) {
+              if (req.method === 'POST') {
+                try {
+                  const body = await new Promise((resolve) => {
+                    let data = '';
+                    req.on('data', chunk => data += chunk);
+                    req.on('end', () => resolve(JSON.parse(data)));
+                  });
+
+                  const method = req.url.split('/').pop();
+                  console.log(`[Secure Proxy] Creating Pakasir ${method} transaction...`);
+
+                  // INJECT KEYS FROM .ENV (SERVER SIDE ONLY)
+                  const secureBody = {
+                    ...body,
+                    project: env.VITE_PAKASIR_SLUG,
+                    api_key: env.VITE_PAKASIR_API_KEY
+                  };
+
+                  const response = await fetch(`https://app.pakasir.com/api/transactioncreate/${method}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(secureBody)
+                  });
+
+                  const result = await response.json();
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify(result));
+                } catch (err) {
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ error: err.message }));
+                }
+                return;
+              }
+            }
+            next();
+          });
+        }
+      }
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
@@ -46,8 +80,6 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
   };

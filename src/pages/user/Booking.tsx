@@ -34,6 +34,22 @@ export default function Booking() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPaymentGateway, setShowPaymentGateway] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('qris');
+  const [paymentData, setPaymentData] = useState<{ number: string; expired: string; total: number; method: string } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const PAYMENT_METHODS = [
+    { id: 'qris', name: 'QRIS / E-Wallet', desc: 'Gopay, OVO, Dana, ShopeePay', color: 'bg-blue-600' },
+    { id: 'bri_va', name: 'BRI Virtual Account', desc: 'Transfer via BRIVA', color: 'bg-[#00529C]' },
+    { id: 'bni_va', name: 'BNI Virtual Account', desc: 'Transfer via BNI VA', color: 'bg-[#005E6A]' },
+    { id: 'cimb_niaga_va', name: 'CIMB Niaga VA', desc: 'Transfer via CIMB', color: 'bg-[#ED1C24]' },
+    { id: 'permata_va', name: 'Permata VA', desc: 'Transfer via Permata', color: 'bg-[#00A551]' },
+    { id: 'maybank_va', name: 'Maybank VA', desc: 'Transfer via Maybank', color: 'bg-[#FFC20E]' },
+    { id: 'bnc_va', name: 'Bank Neo Commerce VA', desc: 'Transfer via BNC', color: 'bg-[#FFD100]' },
+    { id: 'sampoerna_va', name: 'Bank Sampoerna VA', desc: 'Transfer via Sampoerna', color: 'bg-[#1B4E9B]' },
+    { id: 'artha_graha_va', name: 'Artha Graha VA', desc: 'Transfer via Artha Graha', color: 'bg-[#E30613]' },
+    { id: 'atm_bersama_va', name: 'ATM Bersama VA', desc: 'Transfer via ATM Bersama', color: 'bg-[#005BA1]' },
+  ];
 
   const packages = [
     { id: 'std', name: 'Standard Session', price: 35000, priceStr: 'Rp 35.000', features: ['2 Printed Strips', 'Digital Files', '15 Mins Session'], popular: false },
@@ -80,28 +96,64 @@ export default function Booking() {
   };
 
   const handlePayment = async () => {
+    if (!activePackage) return;
     setIsProcessing(true);
+    
     try {
       const PAKASIR_SLUG = import.meta.env.VITE_PAKASIR_SLUG;
+      const PAKASIR_API_KEY = import.meta.env.VITE_PAKASIR_API_KEY;
 
-      if (!PAKASIR_SLUG || PAKASIR_SLUG === 'isi_slug_proyek_pakasir_kamu') {
-        await submitToSpreadsheet();
-        navigate('/memories');
-        return;
+      if (!PAKASIR_SLUG || !PAKASIR_API_KEY) {
+        throw new Error('Konfigurasi Pakasir (SLUG/API KEY) belum lengkap di .env');
       }
 
-      await submitToSpreadsheet();
       const orderId = `FTG-${Date.now()}`;
-      const amount = activePackage?.price ?? 0;
-      const redirectAfterPay = `${window.location.origin}/memories`;
-      const pakasirUrl = `https://app.pakasir.com/pay/${PAKASIR_SLUG}/${amount}?order_id=${orderId}&redirect=${encodeURIComponent(redirectAfterPay)}&qris_only=1`;
+      const apiUrl = `/pakasir-api/api/transactioncreate/${selectedPaymentMethod}`;
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: orderId,
+          amount: activePackage.price
+        })
+      });
 
-      window.location.href = pakasirUrl;
+      console.log('Pakasir Response Status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Pakasir Error Response:', errorText);
+        throw new Error(`Server Pakasir error (${response.status}): ${errorText || 'No response body'}`);
+      }
+
+      const data = await response.json();
+
+      if (data.payment) {
+        setPaymentData({
+          number: data.payment.payment_number,
+          expired: data.payment.expired_at,
+          total: data.payment.total_payment,
+          method: data.payment.payment_method
+        });
+        
+        // Simpan ke spreadsheet juga
+        await submitToSpreadsheet();
+      } else {
+        throw new Error(data.message || 'Gagal generate pembayaran');
+      }
     } catch (error: any) {
       console.error('Error in handlePayment:', error);
       alert(`Error: ${error.message}`);
+    } finally {
       setIsProcessing(false);
     }
+  };
+
+  const copyVA = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (showPaymentGateway) {
@@ -114,55 +166,114 @@ export default function Booking() {
         >
           <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-accent to-primary-dark" />
 
-          <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-100">
+          <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
             <h2 className="font-bold text-gray-800 flex items-center gap-2">
               <ShieldCheck className="text-green-500" size={20} />
               Secure Pay
             </h2>
-            <div className="px-3 py-1 bg-primary/10 rounded-full">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Fotogo Hub</span>
-            </div>
+            <button 
+              onClick={() => { setShowPaymentGateway(false); setPaymentData(null); }}
+              className="text-xs font-bold text-text-secondary"
+            >
+              Cancel
+            </button>
           </div>
 
-          <div className="text-center mb-8">
-            <p className="text-xs text-text-secondary mb-1 font-medium">Total Payment</p>
-            <p className="text-4xl font-black text-text-dark tracking-tight">{activePackage?.priceStr}</p>
-          </div>
-
-          <div className="space-y-3 mb-8">
-            <div className="p-4 rounded-2xl border-2 border-primary/20 bg-primary/5 flex gap-4 items-center">
-              <div className="w-12 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-[10px] shadow-sm">QRIS</div>
-              <div>
-                <p className="text-sm font-bold text-text-dark">QRIS / E-Wallet</p>
-                <p className="text-[10px] text-text-secondary font-medium">Gopay, OVO, Dana, ShopeePay</p>
+          {!paymentData ? (
+            <>
+              <div className="text-center mb-6">
+                <p className="text-xs text-text-secondary mb-1 font-medium">Total Payment</p>
+                <p className="text-4xl font-black text-text-dark tracking-tight">{activePackage?.priceStr}</p>
               </div>
-              <CheckCircle2 className="ml-auto text-primary" size={18} />
-            </div>
-            <div className="p-4 rounded-2xl border border-gray-100 flex gap-4 items-center opacity-40 grayscale pointer-events-none">
-              <div className="w-12 h-8 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 font-bold text-[10px]">BCA</div>
-              <div>
-                <p className="text-sm font-bold text-gray-800">Virtual Account</p>
-                <p className="text-[10px] text-gray-500 font-medium">Bank Transfer</p>
+
+              <div className="space-y-3 mb-8 max-h-[40vh] overflow-y-auto no-scrollbar pr-1">
+                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest pl-1 sticky top-0 bg-white py-1 z-10">Pilih Metode</p>
+                
+                {PAYMENT_METHODS.map((method) => (
+                  <button
+                    key={method.id}
+                    onClick={() => setSelectedPaymentMethod(method.id)}
+                    className={cn(
+                      "w-full p-4 rounded-2xl border-2 transition-all flex gap-4 items-center text-left",
+                      selectedPaymentMethod === method.id ? "border-primary bg-primary/5" : "border-gray-50 bg-gray-50/50"
+                    )}
+                  >
+                    <div className={cn("w-12 h-8 rounded-lg flex items-center justify-center text-white font-bold text-[8px] shadow-sm text-center leading-tight px-1", method.color)}>
+                      {method.id === 'qris' ? 'QRIS' : method.name.split(' ')[0]}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-text-dark">{method.name}</p>
+                      <p className="text-[10px] text-text-secondary font-medium">{method.desc}</p>
+                    </div>
+                    {selectedPaymentMethod === method.id && <CheckCircle2 className="ml-auto text-primary" size={18} />}
+                  </button>
+                ))}
               </div>
-            </div>
-          </div>
 
-          <button
-            onClick={handlePayment}
-            disabled={isProcessing}
-            className="w-full bg-primary hover:bg-primary-dark text-white py-4.5 rounded-2xl font-bold transition-all flex justify-center items-center gap-2 shadow-xl shadow-primary/25 active:scale-[0.98]"
-          >
-            {isProcessing ? <Loader2 size={20} className="animate-spin" /> : <ShieldCheck size={20} />}
-            {isProcessing ? 'Processing...' : 'Pay Now'}
-          </button>
+              <button
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className="w-full bg-primary hover:bg-primary-dark text-white py-4.5 rounded-2xl font-bold transition-all flex justify-center items-center gap-2 shadow-xl shadow-primary/25 active:scale-[0.98]"
+              >
+                {isProcessing ? <Loader2 size={20} className="animate-spin" /> : <ShieldCheck size={20} />}
+                {isProcessing ? 'Generating Payment...' : 'Proceed to Payment'}
+              </button>
+            </>
+          ) : (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+              <div className="mb-6">
+                <p className="text-xs text-text-secondary mb-1">Silakan Selesaikan Pembayaran</p>
+                <p className="text-2xl font-black text-primary">Rp {paymentData.total.toLocaleString('id-ID')}</p>
+              </div>
 
-          <button
-            onClick={() => setShowPaymentGateway(false)}
-            disabled={isProcessing}
-            className="w-full mt-4 py-2 text-xs text-text-secondary font-bold hover:text-text-dark transition-colors"
-          >
-            Cancel Payment
-          </button>
+              {paymentData.method === 'qris' ? (
+                <div className="bg-white p-4 rounded-3xl border-2 border-primary/10 shadow-inner inline-block mb-6">
+                   <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(paymentData.number)}`} 
+                    alt="QRIS Code"
+                    className="w-64 h-64 mx-auto"
+                   />
+                   <div className="mt-4 flex items-center justify-center gap-2">
+                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                     <span className="text-[10px] font-bold text-text-secondary uppercase">Scan with any e-wallet</span>
+                   </div>
+                </div>
+              ) : (
+                <div className="bg-primary/5 p-6 rounded-3xl border-2 border-primary/10 mb-6 text-left">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Nomor Virtual Account</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-2xl font-black text-text-dark tracking-widest">{paymentData.number}</p>
+                    <button 
+                      onClick={() => copyVA(paymentData.number)}
+                      className={cn(
+                        "p-2 rounded-xl transition-all",
+                        copied ? "bg-green-500 text-white" : "bg-white text-primary shadow-sm"
+                      )}
+                    >
+                      {copied ? <CheckCircle2 size={16} /> : <CreditCard size={16} />}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-text-secondary mt-3 font-medium">
+                    Bayar sebelum: {new Date(paymentData.expired).toLocaleString('id-ID')}
+                  </p>
+                </div>
+              )}
+
+              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3 mb-8 text-left">
+                <Info size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                <p className="text-[10px] text-amber-700 font-bold leading-relaxed">
+                  Setelah membayar, harap tunggu sebentar. Sistem akan otomatis memproses pesananmu.
+                </p>
+              </div>
+
+              <button
+                onClick={() => navigate('/memories')}
+                className="w-full bg-text-dark text-white py-4 rounded-2xl font-bold active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+              >
+                Sudah Bayar? Cek Status
+              </button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     );
