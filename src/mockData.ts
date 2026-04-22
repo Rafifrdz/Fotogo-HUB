@@ -44,9 +44,9 @@ export const MOCK_SESSIONS: PhotoSession[] = [
 export const MOCK_BOOTHS: Booth[] = [
   {
     id: "b1",
-    name: "Braga Vibes Malang",
+    name: "ABAH",
     rating: 4.8,
-    price: "Rp 35.000",
+    price: "35000",
     imageUrl: "https://picsum.photos/seed/booth1/400/300",
     address: "Jl. Soekarno Hatta No. 12, Malang",
     promo: "15% OFF Weekend",

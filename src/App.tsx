@@ -18,7 +18,14 @@ import Queue from './pages/user/Queue';
 import PartnerDashboard from './pages/partner/Dashboard';
 import PartnerUpload from './pages/partner/Upload';
 import PartnerAnalytics from './pages/partner/Analytics';
+import PartnerSoftware from './pages/partner/Software';
+import BoothKiosk from './pages/partner/BoothKiosk';
 import PartnerLayout from './components/partner/PartnerLayout';
+
+import Templates from './pages/partner/Templates';
+import Events from './pages/partner/Events';
+import Customers from './pages/partner/Customers';
+import BoothSettings from './pages/partner/BoothSettings';
 
 export default function App() {
   return (
@@ -40,12 +47,18 @@ export default function App() {
         {/* Partner/Mitra Routes — accessible via /mitrago */}
         <Route path="/mitrago" element={<PartnerLayout />}>
           <Route index element={<PartnerDashboard />} />
+          <Route path="software" element={<PartnerSoftware />} />
+          <Route path="templates" element={<Templates />} />
+          <Route path="events" element={<Events />} />
           <Route path="upload" element={<PartnerUpload />} />
           <Route path="analytics" element={<PartnerAnalytics />} />
-          <Route path="customers" element={<PartnerAnalytics />} />
+          <Route path="customers" element={<Customers />} />
           <Route path="referral" element={<PartnerAnalytics />} />
-          <Route path="settings" element={<PartnerAnalytics />} />
+          <Route path="settings" element={<BoothSettings />} />
         </Route>
+
+        {/* Fullscreen Kiosk App */}
+        <Route path="/mitrago/kiosk" element={<BoothKiosk />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

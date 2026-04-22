@@ -82,8 +82,8 @@ export default function PartnerDashboard() {
       {/* Header with Quick Actions */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-text-dark">Welcome back, Braga Vibes!</h2>
-          <p className="text-text-secondary">Here's what's happening today.</p>
+          <h2 className="text-xl font-black text-text-dark">Welcome back, Braga Vibes!</h2>
+          <p className="text-text-secondary text-sm mt-1">Here's what's happening at your booth today.</p>
         </div>
         
         <div className="flex items-center gap-3 w-full md:w-auto">
@@ -121,7 +121,7 @@ export default function PartnerDashboard() {
             onClick={() => setShowQuickAdd(true)}
             className="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-105 transition-transform"
           >
-            <Plus size={18} /> Quick Add
+            <Plus size={16} /> Quick Add
           </button>
         </div>
       </div>

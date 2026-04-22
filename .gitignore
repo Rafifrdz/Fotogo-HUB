@@ -6,3 +6,15 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Production
+dist/
+release/
+dist-electron/
+dev-dist/
+build/
+coverage/
+
+# OS
+.DS_Store
+*.log

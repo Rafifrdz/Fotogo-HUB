@@ -98,7 +98,7 @@ export default function Booking() {
   const handlePayment = async () => {
     if (!activePackage) return;
     setIsProcessing(true);
-    
+
     try {
       const PAKASIR_SLUG = import.meta.env.VITE_PAKASIR_SLUG;
       const PAKASIR_API_KEY = import.meta.env.VITE_PAKASIR_API_KEY;
@@ -109,7 +109,7 @@ export default function Booking() {
 
       const orderId = `FTG-${Date.now()}`;
       const apiUrl = `/api/pakasir`;
-      
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -137,7 +137,7 @@ export default function Booking() {
           total: data.payment.total_payment,
           method: data.payment.payment_method
         });
-        
+
         // Simpan ke spreadsheet juga
         await submitToSpreadsheet();
       } else {
@@ -172,7 +172,7 @@ export default function Booking() {
               <ShieldCheck className="text-green-500" size={20} />
               Secure Pay
             </h2>
-            <button 
+            <button
               onClick={() => { setShowPaymentGateway(false); setPaymentData(null); }}
               className="text-xs font-bold text-text-secondary"
             >
@@ -189,7 +189,7 @@ export default function Booking() {
 
               <div className="space-y-3 mb-8 max-h-[40vh] overflow-y-auto no-scrollbar pr-1">
                 <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest pl-1 sticky top-0 bg-white py-1 z-10">Pilih Metode</p>
-                
+
                 {PAYMENT_METHODS.map((method) => (
                   <button
                     key={method.id}
@@ -229,22 +229,22 @@ export default function Booking() {
 
               {paymentData.method === 'qris' ? (
                 <div className="bg-white p-4 rounded-3xl border-2 border-primary/10 shadow-inner inline-block mb-6">
-                   <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(paymentData.number)}`} 
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(paymentData.number)}`}
                     alt="QRIS Code"
                     className="w-64 h-64 mx-auto"
-                   />
-                   <div className="mt-4 flex items-center justify-center gap-2">
-                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                     <span className="text-[10px] font-bold text-text-secondary uppercase">Scan with any e-wallet</span>
-                   </div>
+                  />
+                  <div className="mt-4 flex items-center justify-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[10px] font-bold text-text-secondary uppercase">Scan with any e-wallet</span>
+                  </div>
                 </div>
               ) : (
                 <div className="bg-primary/5 p-6 rounded-3xl border-2 border-primary/10 mb-6 text-left">
                   <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Nomor Virtual Account</p>
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-2xl font-black text-text-dark tracking-widest">{paymentData.number}</p>
-                    <button 
+                    <button
                       onClick={() => copyVA(paymentData.number)}
                       className={cn(
                         "p-2 rounded-xl transition-all",
@@ -320,11 +320,11 @@ export default function Booking() {
                   <div>
                     <h3 className="font-bold text-text-dark">{booth.name}</h3>
                     <div className="flex items-center gap-3 mt-1.5">
-                       <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded-lg border border-gray-100 shadow-sm">
-                          <Star size={10} className="fill-amber-400 text-amber-400" />
-                          <span className="text-[10px] font-bold">{booth.rating}</span>
-                       </div>
-                       <span className="text-[10px] font-bold text-primary">{booth.distance} away</span>
+                      <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded-lg border border-gray-100 shadow-sm">
+                        <Star size={10} className="fill-amber-400 text-amber-400" />
+                        <span className="text-[10px] font-bold">{booth.rating}</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-primary">{booth.distance} away</span>
                     </div>
                   </div>
                 </div>
@@ -364,9 +364,9 @@ export default function Booking() {
                             "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm",
                             selectedPackage === pkg.id ? "bg-primary text-white" : "bg-white text-text-secondary"
                           )}>
-                             {pkg.id === 'std' && <User size={24} />}
-                             {pkg.id === 'prm' && <Sparkles size={24} />}
-                             {pkg.id === 'grp' && <Users size={24} />}
+                            {pkg.id === 'std' && <User size={24} />}
+                            {pkg.id === 'prm' && <Sparkles size={24} />}
+                            {pkg.id === 'grp' && <Users size={24} />}
                           </div>
                           {selectedPackage === pkg.id && (
                             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="p-1.5 bg-primary rounded-full text-white shadow-sm">
@@ -396,89 +396,89 @@ export default function Booking() {
 
               {/* Section: Pick a Time - Grid Chips */}
               <div className="mt-4 px-6 space-y-6">
-                 <div>
-                    <h2 className="text-lg font-black text-text-dark tracking-tight">Pick a time</h2>
-                    <p className="text-xs text-text-secondary font-medium">Available slots for today</p>
-                 </div>
+                <div>
+                  <h2 className="text-lg font-black text-text-dark tracking-tight">Pick a time</h2>
+                  <p className="text-xs text-text-secondary font-medium">Available slots for today</p>
+                </div>
 
-                 <div className="bg-soft-gray/50 rounded-[2.25rem] p-6 border border-gray-100">
-                    <div className="flex items-center gap-3 mb-6">
-                       <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-50">
-                          <Calendar size={18} className="text-primary" />
-                       </div>
-                       <div>
-                          <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Selected Date</p>
-                          <p className="text-sm font-bold text-text-dark">Friday, 10 April 2026</p>
-                       </div>
+                <div className="bg-soft-gray/50 rounded-[2.25rem] p-6 border border-gray-100">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-50">
+                      <Calendar size={18} className="text-primary" />
                     </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Selected Date</p>
+                      <p className="text-sm font-bold text-text-dark">Friday, 10 April 2026</p>
+                    </div>
+                  </div>
 
-                    <div className="space-y-6">
-                       {timeSlots.map((group) => (
-                          <div key={group.label} className="space-y-3">
-                             <p className="text-[10px] font-black text-text-secondary/50 uppercase tracking-widest pl-1">{group.label}</p>
-                             <div className="grid grid-cols-4 gap-2.5">
-                                {group.slots.map((time) => (
-                                   <button
-                                      key={time}
-                                      onClick={() => setSelectedTime(time)}
-                                      className={cn(
-                                         "py-3 rounded-2xl text-[11px] font-black transition-all border-2 active:scale-95",
-                                         selectedTime === time
-                                            ? "bg-primary border-primary text-white shadow-lg shadow-primary/20"
-                                            : "bg-white border-transparent text-text-dark shadow-sm hover:border-gray-200"
-                                      )}
-                                   >
-                                      {time}
-                                   </button>
-                                ))}
-                             </div>
-                          </div>
-                       ))}
-                    </div>
+                  <div className="space-y-6">
+                    {timeSlots.map((group) => (
+                      <div key={group.label} className="space-y-3">
+                        <p className="text-[10px] font-black text-text-secondary/50 uppercase tracking-widest pl-1">{group.label}</p>
+                        <div className="grid grid-cols-4 gap-2.5">
+                          {group.slots.map((time) => (
+                            <button
+                              key={time}
+                              onClick={() => setSelectedTime(time)}
+                              className={cn(
+                                "py-3 rounded-2xl text-[11px] font-black transition-all border-2 active:scale-95",
+                                selectedTime === time
+                                  ? "bg-primary border-primary text-white shadow-lg shadow-primary/20"
+                                  : "bg-white border-transparent text-text-dark shadow-sm hover:border-gray-200"
+                              )}
+                            >
+                              {time}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
 
-                    <div className="mt-6 bg-amber-50/50 p-4 rounded-2xl border border-amber-100/50 flex gap-3">
-                       <Info size={16} className="text-amber-500 shrink-0 mt-0.5" />
-                       <p className="text-[10px] text-amber-700 leading-relaxed font-bold">
-                          Mohon datang 5 menit sebelum jadwal. Sesi akan dimulai tepat waktu untuk kenyamanan bersama.
-                       </p>
-                    </div>
-                 </div>
+                  <div className="mt-6 bg-amber-50/50 p-4 rounded-2xl border border-amber-100/50 flex gap-3">
+                    <Info size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-amber-700 leading-relaxed font-bold">
+                      Mohon datang 5 menit sebelum jadwal. Sesi akan dimulai tepat waktu untuk kenyamanan bersama.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Section: Personal Info */}
               <div className="mt-10 px-6 space-y-6">
-                 <div>
-                    <h2 className="text-lg font-black text-text-dark tracking-tight">Your Details</h2>
-                    <p className="text-xs text-text-secondary font-medium">Who is booking this session?</p>
-                 </div>
+                <div>
+                  <h2 className="text-lg font-black text-text-dark tracking-tight">Your Details</h2>
+                  <p className="text-xs text-text-secondary font-medium">Who is booking this session?</p>
+                </div>
 
-                 <div className="space-y-4">
-                    <div className="relative group">
-                       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary transition-transform group-focus-within:scale-110">
-                          <User size={18} />
-                       </div>
-                       <input
-                          type="text"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="Full Name"
-                          className="w-full pl-12 pr-6 py-4.5 bg-soft-gray border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-[1.5rem] outline-none transition-all text-sm font-bold text-text-dark placeholder:text-text-secondary/40 shadow-sm shadow-black/[0.02]"
-                       />
+                <div className="space-y-4">
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary transition-transform group-focus-within:scale-110">
+                      <User size={18} />
                     </div>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Full Name"
+                      className="w-full pl-12 pr-6 py-4.5 bg-soft-gray border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-[1.5rem] outline-none transition-all text-sm font-bold text-text-dark placeholder:text-text-secondary/40 shadow-sm shadow-black/[0.02]"
+                    />
+                  </div>
 
-                    <div className="relative group">
-                       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary transition-transform group-focus-within:scale-110">
-                          <Phone size={18} />
-                       </div>
-                       <input
-                          type="tel"
-                          value={whatsapp}
-                          onChange={(e) => setWhatsapp(e.target.value)}
-                          placeholder="WhatsApp Number (e.g. 0812...)"
-                          className="w-full pl-12 pr-6 py-4.5 bg-soft-gray border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-[1.5rem] outline-none transition-all text-sm font-bold text-text-dark placeholder:text-text-secondary/40 shadow-sm shadow-black/[0.02]"
-                       />
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary transition-transform group-focus-within:scale-110">
+                      <Phone size={18} />
                     </div>
-                 </div>
+                    <input
+                      type="tel"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      placeholder="WhatsApp Number (e.g. 0812...)"
+                      className="w-full pl-12 pr-6 py-4.5 bg-soft-gray border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-[1.5rem] outline-none transition-all text-sm font-bold text-text-dark placeholder:text-text-secondary/40 shadow-sm shadow-black/[0.02]"
+                    />
+                  </div>
+                </div>
               </div>
             </motion.div>
           ) : (
@@ -490,11 +490,11 @@ export default function Booking() {
               className="px-6 py-8 space-y-8"
             >
               <div className="text-center space-y-3">
-                 <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-2 shadow-inner">
-                    <CreditCard size={36} strokeWidth={2.5} />
-                 </div>
-                 <h2 className="text-2xl font-black text-text-dark tracking-tighter">Satu langkah lagi!</h2>
-                 <p className="text-xs text-text-secondary font-medium">Periksa kembali pesananmu sebelum lanjut membayar.</p>
+                <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-2 shadow-inner">
+                  <CreditCard size={36} strokeWidth={2.5} />
+                </div>
+                <h2 className="text-2xl font-black text-text-dark tracking-tighter">Satu langkah lagi!</h2>
+                <p className="text-xs text-text-secondary font-medium">Periksa kembali pesananmu sebelum lanjut membayar.</p>
               </div>
 
               <div className="bg-soft-gray/50 rounded-[2.5rem] p-8 border border-gray-100 relative overflow-hidden">
@@ -517,8 +517,8 @@ export default function Booking() {
                     <div>
                       <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest mb-1">Package</p>
                       <div className="flex items-center gap-2">
-                         <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                         <p className="text-sm font-black text-text-dark leading-tight">{activePackage?.name}</p>
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        <p className="text-sm font-black text-text-dark leading-tight">{activePackage?.name}</p>
                       </div>
                     </div>
                   </div>
@@ -531,20 +531,20 @@ export default function Booking() {
 
                   <div className="pt-6 border-t border-dashed border-gray-200 mt-2 flex justify-between items-end">
                     <div>
-                       <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Total Bayar</p>
-                       <p className="text-3xl font-black text-primary tracking-tighter">{activePackage?.priceStr}</p>
+                      <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Total Bayar</p>
+                      <p className="text-3xl font-black text-primary tracking-tighter">{activePackage?.priceStr}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="bg-primary/5 p-5 rounded-[2rem] border border-primary/20 flex gap-4">
-                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center shrink-0">
-                    <ShieldCheck size={20} className="text-primary" />
-                 </div>
-                 <p className="text-[10px] font-bold text-primary/80 leading-relaxed">
-                    Pembayaran diproses secara otomatis. E-ticket akan segera tersedia setelah pembayaran terverifikasi.
-                 </p>
+                <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center shrink-0">
+                  <ShieldCheck size={20} className="text-primary" />
+                </div>
+                <p className="text-[10px] font-bold text-primary/80 leading-relaxed">
+                  Pembayaran diproses secara otomatis. E-ticket akan segera tersedia setelah pembayaran terverifikasi.
+                </p>
               </div>
             </motion.div>
           )}
@@ -554,21 +554,21 @@ export default function Booking() {
       {/* Sticky Footer Actions - Gojek Style */}
       <footer className="bg-white px-6 pt-4 pb-8 border-t border-gray-50 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] sticky bottom-0 z-30">
         {!showConfirmation ? (
-           <div className="flex items-center gap-4">
-              <div className="flex-1">
-                 <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Total Price</p>
-                 <p className="text-xl font-black text-text-dark tracking-tight">
-                    {activePackage ? activePackage.priceStr : 'Rp 0'}
-                 </p>
-              </div>
-              <button
-                disabled={!isFormValid}
-                onClick={() => setShowConfirmation(true)}
-                className="flex-[1.5] bg-primary disabled:bg-gray-100 disabled:text-gray-400 text-white py-4.5 rounded-[1.5rem] font-black shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 transition-all text-sm"
-              >
-                Lanjutkan <ChevronRight size={18} />
-              </button>
-           </div>
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Total Price</p>
+              <p className="text-xl font-black text-text-dark tracking-tight">
+                {activePackage ? activePackage.priceStr : 'Rp 0'}
+              </p>
+            </div>
+            <button
+              disabled={!isFormValid}
+              onClick={() => setShowConfirmation(true)}
+              className="flex-[1.5] bg-primary disabled:bg-gray-100 disabled:text-gray-400 text-white py-4.5 rounded-[1.5rem] font-black shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 transition-all text-sm"
+            >
+              Lanjutkan <ChevronRight size={18} />
+            </button>
+          </div>
         ) : (
           <button
             onClick={() => setShowPaymentGateway(true)}
