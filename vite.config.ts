@@ -26,12 +26,12 @@ export default defineConfig(({mode}) => {
           ]
         }
       }),
-      // SECURE PROXY PLUGIN
+      // UNIFIED API PROXY (Matches Vercel's /api/pakasir)
       {
         name: 'pakasir-proxy',
         configureServer(server) {
           server.middlewares.use(async (req, res, next) => {
-            if (req.url?.startsWith('/pakasir-api/')) {
+            if (req.url === '/api/pakasir') {
               if (req.method === 'POST') {
                 try {
                   const body = await new Promise((resolve) => {
@@ -40,20 +40,18 @@ export default defineConfig(({mode}) => {
                     req.on('end', () => resolve(JSON.parse(data)));
                   });
 
-                  const method = req.url.split('/').pop();
-                  console.log(`[Secure Proxy] Creating Pakasir ${method} transaction...`);
-
-                  // INJECT KEYS FROM .ENV (SERVER SIDE ONLY)
-                  const secureBody = {
-                    ...body,
-                    project: env.VITE_PAKASIR_SLUG,
-                    api_key: env.VITE_PAKASIR_API_KEY
-                  };
+                  const { method, order_id, amount } = body;
+                  console.log(`[Local Proxy] Creating Pakasir ${method} transaction...`);
 
                   const response = await fetch(`https://app.pakasir.com/api/transactioncreate/${method}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(secureBody)
+                    body: JSON.stringify({
+                      project: env.VITE_PAKASIR_SLUG,
+                      order_id,
+                      amount,
+                      api_key: env.VITE_PAKASIR_API_KEY
+                    })
                   });
 
                   const result = await response.json();

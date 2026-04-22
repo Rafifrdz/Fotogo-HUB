@@ -108,12 +108,13 @@ export default function Booking() {
       }
 
       const orderId = `FTG-${Date.now()}`;
-      const apiUrl = `/pakasir-api/api/transactioncreate/${selectedPaymentMethod}`;
+      const apiUrl = `/api/pakasir`;
       
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          method: selectedPaymentMethod,
           order_id: orderId,
           amount: activePackage.price
         })
