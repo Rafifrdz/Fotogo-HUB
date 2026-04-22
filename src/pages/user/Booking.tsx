@@ -165,7 +165,7 @@ export default function Booking() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="bg-white rounded-[2.5rem] shadow-2xl p-8 w-full max-w-md relative overflow-hidden ring-1 ring-black/5"
         >
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-accent to-primary-dark" />
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-primary" />
 
           <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
             <h2 className="font-bold text-gray-800 flex items-center gap-2">

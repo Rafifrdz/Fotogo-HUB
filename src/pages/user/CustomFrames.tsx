@@ -81,7 +81,7 @@ export default function CustomFrames() {
 
       {/* ── Live Preview Studio ─────────────────────────────────────────── */}
       {activeFrame && (
-        <section className="bg-gradient-to-br from-primary/10 to-blue-500/10 p-6 rounded-3xl border border-primary/20 shadow-sm space-y-4">
+        <section className="bg-primary-light/60 p-6 rounded-3xl border border-primary/20 shadow-card space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-extrabold text-primary flex items-center gap-2">
               <Star size={18} className="fill-primary" /> Live Preview Studio

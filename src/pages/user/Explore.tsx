@@ -181,7 +181,7 @@ export default function Explore() {
               className={cn(
                 'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-300',
                 cat === activeCategory
-                  ? 'bg-gradient-to-r from-primary to-blue-500 text-white shadow-lg shadow-primary/30 border border-transparent'
+                  ? 'bg-primary text-white shadow-card border border-transparent'
                   : 'bg-white text-text-secondary border border-gray-200 hover:border-primary/30 hover:bg-soft-gray'
               )}
             >
@@ -359,41 +359,64 @@ export default function Explore() {
                     position={{ lat: selectedBooth.latitude, lng: selectedBooth.longitude }}
                     onCloseClick={() => setSelectedBooth(null)}
                   >
-                    <div className="p-1.5 max-w-[220px] font-sans">
-                      <div className="relative rounded-xl overflow-hidden mb-3 shadow-sm">
-                        <img
-                          src={selectedBooth.imageUrl}
-                          alt={selectedBooth.name}
-                          className="w-full h-28 object-cover"
-                        />
-                        {selectedBooth.promo && (
-                           <div className="absolute top-2 left-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-md">
-                             PROMO
-                           </div>
-                        )}
-                      </div>
-                      <h3 className="font-extrabold text-sm text-text-dark leading-tight">{selectedBooth.name}</h3>
-                      <div className="flex items-center justify-between mt-1.5 mb-3">
-                        <div className="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md">
-                          <Star size={10} className="fill-amber-500 text-amber-500" />
-                          <span className="text-[10px] font-bold text-amber-600">{selectedBooth.rating}</span>
+                    <div className="w-[252px] font-sans">
+                      <div className="bg-white rounded-[22px] overflow-hidden border border-border shadow-[0_12px_40px_rgba(16,24,40,0.10)]">
+                        {/* Media */}
+                        <div className="relative">
+                          <img
+                            src={selectedBooth.imageUrl}
+                            alt={selectedBooth.name}
+                            className="w-full h-32 object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
+
+                          {selectedBooth.promo && (
+                            <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-text-dark text-[9px] font-extrabold px-2.5 py-1 rounded-full border border-white shadow-sm">
+                              PROMO
+                            </div>
+                          )}
+
+                          {/* Price pill */}
+                          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm border border-white/80">
+                            <span className="text-[11px] font-black text-primary">{selectedBooth.price}</span>
+                          </div>
                         </div>
-                        <span className="text-xs font-black text-primary">{selectedBooth.price}</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={startNavigation}
-                          className="flex-1 bg-white border-2 border-primary text-primary py-2.5 rounded-xl text-center text-[11px] font-bold shadow-sm hover:bg-primary/5 transition-all active:scale-95 flex items-center justify-center gap-1"
-                        >
-                          <Navigation size={12} />
-                          Navigasi
-                        </button>
-                        <Link
-                          to={`/booking/${selectedBooth.id}`}
-                          className="flex-1 bg-gradient-to-r from-primary to-blue-500 text-white py-2.5 rounded-xl text-center text-[11px] font-bold shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all active:scale-95"
-                        >
-                          Booking
-                        </Link>
+
+                        {/* Content */}
+                        <div className="p-4">
+                          <h3 className="font-black text-[15px] text-text-dark leading-snug tracking-tight line-clamp-2">
+                            {selectedBooth.name}
+                          </h3>
+
+                          <div className="flex items-center justify-between mt-2">
+                            <div className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">
+                              <Star size={12} className="fill-amber-500 text-amber-500" />
+                              <span className="text-[11px] font-extrabold">{selectedBooth.rating}</span>
+                              <span className="text-[10px] font-semibold text-amber-700/70">(120+)</span>
+                            </div>
+                            {selectedBooth.distance && (
+                              <span className="text-[11px] font-semibold text-text-secondary">
+                                {selectedBooth.distance}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="mt-3 grid grid-cols-2 gap-2">
+                            <button
+                              onClick={startNavigation}
+                              className="h-11 rounded-2xl bg-white border border-primary/25 text-primary font-extrabold text-[12px] shadow-card hover:bg-primary/5 transition-colors active:scale-[0.98] flex items-center justify-center gap-1.5"
+                            >
+                              <Navigation size={14} />
+                              Navigasi
+                            </button>
+                            <Link
+                              to={`/booking/${selectedBooth.id}`}
+                              className="h-11 rounded-2xl bg-primary text-white font-extrabold text-[12px] shadow-card hover:bg-primary-dark transition-colors active:scale-[0.98] flex items-center justify-center"
+                            >
+                              Booking
+                            </Link>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </InfoWindow>
@@ -452,7 +475,7 @@ export default function Explore() {
                     </button>
                     <Link
                       to={`/booking/${selectedBooth.id}`}
-                      className="flex-[2] bg-gradient-to-r from-primary to-blue-500 text-white py-3 rounded-xl font-bold text-sm text-center shadow-lg shadow-primary/30"
+                      className="flex-[2] bg-primary text-white py-3 rounded-xl font-bold text-sm text-center shadow-card hover:bg-primary-dark transition-colors"
                     >
                       Booking Booth
                     </Link>

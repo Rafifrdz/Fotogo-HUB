@@ -88,10 +88,11 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="bg-gradient-to-br from-primary via-blue-600 to-indigo-600 rounded-[2rem] p-5 flex items-center justify-between mt-4 shadow-xl shadow-primary/20 relative overflow-hidden group"
+          className="hero-gradient rounded-[2rem] p-5 flex items-center justify-between mt-4 shadow-primary relative overflow-hidden group"
         >
           {/* Decorative background glow */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors" />
+          <div className="absolute top-0 right-0 w-36 h-36 bg-white/15 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-white/25 transition-colors" />
+          <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-white/10 blur-3xl rounded-full" />
           
           {/* Left: Balance */}
           <div className="flex items-center gap-4 relative z-10">
@@ -124,7 +125,7 @@ export default function Home() {
             </Link>
 
             <Link to="/scan" className="flex flex-col items-center gap-1.5 group/icon">
-              <div className="w-11 h-11 bg-white/100 rounded-2xl flex items-center justify-center shadow-xl group-active/icon:scale-90 transition-all hover:scale-105">
+              <div className="w-11 h-11 bg-white rounded-2xl flex items-center justify-center shadow-lg group-active/icon:scale-90 transition-all hover:scale-[1.03]">
                 <QrCode size={20} className="text-primary" />
               </div>
               <span className="text-[9px] font-black text-white uppercase tracking-wider">Scan</span>

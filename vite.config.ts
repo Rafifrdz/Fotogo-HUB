@@ -34,13 +34,17 @@ export default defineConfig(({mode}) => {
             if (req.url === '/api/pakasir') {
               if (req.method === 'POST') {
                 try {
-                  const body = await new Promise((resolve) => {
+                  const body = await new Promise<unknown>((resolve) => {
                     let data = '';
                     req.on('data', chunk => data += chunk);
                     req.on('end', () => resolve(JSON.parse(data)));
                   });
 
-                  const { method, order_id, amount } = body;
+                  const { method, order_id, amount } = body as {
+                    method: string;
+                    order_id: string;
+                    amount: number;
+                  };
                   console.log(`[Local Proxy] Creating Pakasir ${method} transaction...`);
 
                   const response = await fetch(`https://app.pakasir.com/api/transactioncreate/${method}`, {
@@ -58,8 +62,9 @@ export default defineConfig(({mode}) => {
                   res.setHeader('Content-Type', 'application/json');
                   res.end(JSON.stringify(result));
                 } catch (err) {
+                  const message = err instanceof Error ? err.message : 'Unknown error';
                   res.statusCode = 500;
-                  res.end(JSON.stringify({ error: err.message }));
+                  res.end(JSON.stringify({ error: message }));
                 }
                 return;
               }
