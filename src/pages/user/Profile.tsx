@@ -41,12 +41,7 @@ export default function Profile() {
   if (!user) {
     return (
       <div className="min-h-screen bg-soft-gray flex flex-col">
-        <div className="hero-gradient px-5 pt-12 pb-24 relative overflow-hidden">
-          <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-          <h1 className="text-white text-xl font-bold">Profil</h1>
-        </div>
-
-        <div className="flex-1 px-5 -mt-16 space-y-4">
+      <div className="flex-1 px-5 pt-12 pb-6 space-y-4">
           <div className="bg-white rounded-2xl p-6 shadow-card text-center space-y-4">
             <div className="w-20 h-20 bg-primary-light rounded-full flex items-center justify-center text-primary mx-auto">
               <Camera size={36} />
@@ -92,17 +87,7 @@ export default function Profile() {
     <div className="min-h-screen bg-soft-gray">
 
       {/* ── Hero — Gojek profile header ─────────────────────────────────── */}
-      <div className="hero-gradient px-5 pt-12 pb-24 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="flex items-center justify-between">
-          <h1 className="text-white text-xl font-bold">Profil</h1>
-          <button id="profile-settings-btn" className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center">
-            <Settings size={18} className="text-white" />
-          </button>
-        </div>
-      </div>
-
-      <div className="px-5 -mt-16 pb-8 space-y-4">
+      <div className="px-5 pt-12 pb-8 space-y-4">
 
         {/* ── User Card — Gojek account card ──────────────────────────────── */}
         <motion.div

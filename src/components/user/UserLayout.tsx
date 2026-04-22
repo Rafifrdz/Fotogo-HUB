@@ -96,7 +96,7 @@ export default function UserLayout() {
                 <NavLink
                   to="/explore"
                   state={{ defaultView: 'map' }}
-                  className="relative flex flex-col items-center -translate-y-4"
+                  className="relative flex flex-col items-center -translate-y-3"
                 >
                   {/* Outer glow ring */}
                   <motion.div
@@ -104,10 +104,10 @@ export default function UserLayout() {
                     transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
                     className="absolute inset-0 rounded-full bg-primary/30 blur-sm"
                   />
-                  <div className="w-14 h-14 hero-gradient rounded-full flex items-center justify-center shadow-primary relative z-10">
-                    <item.icon size={26} className="text-white" strokeWidth={2.2} />
+                  <div className="w-12 h-12 hero-gradient rounded-full flex items-center justify-center shadow-primary relative z-10">
+                    <item.icon size={22} className="text-white" strokeWidth={2.2} />
                   </div>
-                  <span className="text-[10px] font-semibold text-primary mt-1.5">Maps</span>
+                  <span className="text-[10px] font-semibold text-primary mt-1">Maps</span>
                 </NavLink>
               );
             }
@@ -126,7 +126,7 @@ export default function UserLayout() {
                   return (
                     <>
                       <item.icon
-                        size={22}
+                        size={20}
                         strokeWidth={itemActive ? 2.5 : 2}
                         className={cn(
                           'transition-colors duration-200',

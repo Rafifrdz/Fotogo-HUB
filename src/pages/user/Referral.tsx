@@ -19,17 +19,7 @@ export default function Referral() {
     <div className="min-h-screen bg-soft-gray">
 
       {/* ── Hero Header — Gojek GoPay style ────────────────────────────── */}
-      <div className="hero-gradient-warm px-5 pt-12 pb-24 relative overflow-hidden">
-        <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute bottom-4 left-0 w-32 h-32 bg-black/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10">
-          <h1 className="text-white text-xl font-bold mb-0.5">Reward & Referral</h1>
-          <p className="text-white/70 text-xs">Kumpulkan poin, dapatkan sesi gratis!</p>
-        </div>
-      </div>
-
-      <div className="px-5 -mt-16 pb-8 space-y-4">
+      <div className="px-5 pt-12 pb-8 space-y-4">
 
         {/* ── Points Balance Card — Gojek GoPay card ──────────────────────── */}
         <motion.div

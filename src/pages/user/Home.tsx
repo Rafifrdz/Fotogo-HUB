@@ -58,13 +58,13 @@ export default function Home() {
       {/* ─────────────────────────────────────────────────────────────────── */}
       {/* TOP BAR — Search + Avatar                                          */}
       {/* ─────────────────────────────────────────────────────────────────── */}
-      <section className="bg-white px-5 pt-12 pb-4 flex items-center gap-3 border-b border-border">
+      <section className="bg-white px-5 pt-10 pb-3 flex items-center gap-3 border-b border-border">
         <div className="flex-1 relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" size={16} />
           <input
             type="text"
             placeholder="Cari photobooth terdekat..."
-            className="w-full bg-soft-gray rounded-full py-2.5 pl-10 pr-4 text-sm text-text-dark placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full bg-soft-gray rounded-full py-2 pl-10 pr-4 text-sm text-text-dark placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
           />
         </div>
         <Link to="/profile" className="flex-shrink-0">
@@ -85,44 +85,49 @@ export default function Home() {
       {/* ─────────────────────────────────────────────────────────────────── */}
       <div className="bg-white px-5 pb-5">
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="bg-soft-gray rounded-2xl p-4 flex items-center justify-between mt-4"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="bg-gradient-to-br from-primary via-blue-600 to-indigo-600 rounded-[2rem] p-5 flex items-center justify-between mt-4 shadow-xl shadow-primary/20 relative overflow-hidden group"
         >
+          {/* Decorative background glow */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors" />
+          
           {/* Left: Balance */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
-              <Coins size={18} className="text-white" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-11 h-11 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center flex-shrink-0 border border-white/30 shadow-inner">
+              <Coins size={22} className="text-white drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-widest leading-none mb-0.5">FotoGo · Points</p>
-              <p className="text-xl font-black text-text-dark leading-none">{MOCK_USER.points} <span className="text-sm font-semibold text-text-secondary">pts</span></p>
+              <p className="text-[10px] font-bold text-white/70 uppercase tracking-[0.2em] leading-none mb-1">FotoGo Wallet</p>
+              <div className="flex items-baseline gap-1">
+                <p className="text-2xl font-black text-white leading-none tracking-tight">{MOCK_USER.points}</p>
+                <p className="text-xs font-bold text-white/90">pts</p>
+              </div>
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="w-px h-10 bg-border mx-2" />
-
           {/* Right: Quick Actions */}
-          <div className="flex items-center gap-5">
-            <Link to="/explore" className="flex flex-col items-center gap-1.5 group" id="home-action-maps">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
-                <MapPin size={18} className="text-primary" />
+          <div className="flex items-center gap-4 relative z-10">
+            <Link to="/explore" className="flex flex-col items-center gap-1.5 group/icon" id="home-action-maps">
+              <div className="w-11 h-11 bg-white/15 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/25 shadow-lg group-active/icon:scale-90 transition-all hover:bg-white/25">
+                <MapPin size={20} className="text-white" />
               </div>
-              <span className="text-[10px] font-semibold text-text-secondary">Maps</span>
+              <span className="text-[9px] font-black text-white uppercase tracking-wider">Maps</span>
             </Link>
-            <Link to="/referral" className="flex flex-col items-center gap-1.5 group">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
-                <Plus size={18} className="text-text-dark" />
+            
+            <Link to="/referral" className="flex flex-col items-center gap-1.5 group/icon">
+              <div className="w-11 h-11 bg-white/15 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/25 shadow-lg group-active/icon:scale-90 transition-all hover:bg-white/25">
+                <Plus size={20} className="text-white" />
               </div>
-              <span className="text-[10px] font-semibold text-text-secondary">Invite</span>
+              <span className="text-[9px] font-black text-white uppercase tracking-wider">Invite</span>
             </Link>
-            <Link to="/scan" className="flex flex-col items-center gap-1.5 group">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
-                <QrCode size={18} className="text-text-dark" />
+
+            <Link to="/scan" className="flex flex-col items-center gap-1.5 group/icon">
+              <div className="w-11 h-11 bg-white/100 rounded-2xl flex items-center justify-center shadow-xl group-active/icon:scale-90 transition-all hover:scale-105">
+                <QrCode size={20} className="text-primary" />
               </div>
-              <span className="text-[10px] font-semibold text-text-secondary">Scan</span>
+              <span className="text-[9px] font-black text-white uppercase tracking-wider">Scan</span>
             </Link>
           </div>
         </motion.div>
@@ -134,7 +139,7 @@ export default function Home() {
       <div className="flex flex-col gap-3 pt-3 pb-28">
 
         {/* ── Kenangan Hari Ini ─────────────────────────────────────────── */}
-        <section className="bg-white px-5 pt-5 pb-5">
+        <section className="bg-white px-5 pt-4 pb-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-bold text-text-dark">Kenangan Hari Ini</h2>
             <Link to="/memories" className="text-primary text-xs font-semibold flex items-center gap-0.5">
@@ -145,7 +150,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="relative h-44 rounded-xl overflow-hidden shadow-sm group"
+            className="relative h-40 rounded-xl overflow-hidden shadow-sm group"
           >
             <img
               src={MOCK_SESSIONS[0].imageUrl}
@@ -155,13 +160,13 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-black/40 p-4 flex flex-col justify-end">
               <p className="text-white/70 text-[10px] font-medium mb-0.5">1 tahun yang lalu hari ini</p>
-              <h3 className="text-white text-base font-bold leading-tight">{MOCK_SESSIONS[0].boothName}</h3>
+              <h3 className="text-white text-sm font-bold leading-tight">{MOCK_SESSIONS[0].boothName}</h3>
               <p className="text-white/60 text-xs mb-3">{MOCK_SESSIONS[0].location}</p>
               <div className="flex gap-2">
-                <Link to="/memories" className="bg-white text-primary px-4 py-1.5 rounded-lg text-xs font-bold">
+                <Link to="/memories" className="bg-white text-primary px-5 py-1.5 rounded-lg text-xs font-bold">
                   Lihat
                 </Link>
-                <button className="bg-white/20 text-white px-4 py-1.5 rounded-lg text-xs font-bold border border-white/20">
+                <button className="bg-white/20 text-white px-5 py-1.5 rounded-lg text-xs font-bold border border-white/20">
                   Ulangi
                 </button>
               </div>
@@ -172,7 +177,7 @@ export default function Home() {
         {/* ── Service Grid 4×2 ──────────────────────────────────────────── */}
         <section className="bg-white px-5 pt-5 pb-6">
           <h2 className="text-sm font-bold text-text-dark mb-4">Layanan</h2>
-          <div className="grid grid-cols-4 gap-y-5 gap-x-2">
+          <div className="grid grid-cols-4 gap-y-4 gap-x-2">
             {SERVICES.map((service, i) => (
               <motion.div
                 key={service.label}
@@ -186,7 +191,7 @@ export default function Home() {
                   className="flex flex-col items-center gap-1.5 group"
                 >
                   <div
-                    className="w-13 h-13 w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-150 group-active:scale-90"
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-150 group-active:scale-90"
                     style={{ backgroundColor: service.bg }}
                   >
                     <service.icon size={22} style={{ color: service.color }} strokeWidth={2} />
@@ -201,7 +206,7 @@ export default function Home() {
         </section>
 
         {/* ── Promo Banner Carousel ─────────────────────────────────────── */}
-        <section className="bg-white px-5 pt-5 pb-5">
+        <section className="bg-white px-5 pt-4 pb-4">
           <h2 className="text-sm font-bold text-text-dark mb-3">Promo Untukmu</h2>
           <div className="relative overflow-hidden rounded-xl">
             <AnimatePresence mode="wait">
@@ -211,21 +216,21 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
                 transition={{ duration: 0.3 }}
-                className="p-5 rounded-xl flex items-center justify-between overflow-hidden"
+                className="p-4 rounded-xl flex items-center justify-between overflow-hidden"
                 style={{ backgroundColor: PROMO_BANNERS[activeBanner].color }}
               >
                 <div className="flex-1 space-y-1.5">
-                  <h3 className="text-white font-bold text-base leading-snug max-w-[200px]">
+                  <h3 className="text-white font-bold text-sm leading-snug max-w-[200px]">
                     {PROMO_BANNERS[activeBanner].title}
                   </h3>
                   <p className="text-white/80 text-xs leading-relaxed max-w-[180px]">
                     {PROMO_BANNERS[activeBanner].subtitle}
                   </p>
-                  <button className="mt-1 bg-white/20 border border-white/30 text-white text-xs font-bold px-4 py-1.5 rounded-lg">
+                  <button className="mt-1 bg-white/20 border border-white/30 text-white text-xs font-bold px-5 py-1.5 rounded-lg">
                     {PROMO_BANNERS[activeBanner].cta}
                   </button>
                 </div>
-                <div className="text-5xl opacity-90 ml-4 flex-shrink-0">
+                <div className="text-4xl opacity-90 ml-4 flex-shrink-0">
                   {PROMO_BANNERS[activeBanner].emoji}
                 </div>
               </motion.div>
@@ -246,7 +251,7 @@ export default function Home() {
         </section>
 
         {/* ── Booth Terdekat ────────────────────────────────────────────── */}
-        <section className="bg-white pt-5 pb-5">
+        <section className="bg-white pt-4 pb-4">
           <div className="flex items-center justify-between px-5 mb-3">
             <h2 className="text-sm font-bold text-text-dark">Booth Terdekat</h2>
             <Link to="/explore" className="text-primary text-xs font-semibold flex items-center gap-0.5">
@@ -256,7 +261,7 @@ export default function Home() {
           <div className="flex gap-3 overflow-x-auto no-scrollbar px-5">
             {boothsLoading
               ? Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="min-w-[160px] h-[160px] bg-border rounded-2xl flex-shrink-0 animate-pulse" />
+                  <div key={i} className="min-w-[140px] h-[140px] bg-border rounded-xl flex-shrink-0 animate-pulse" />
                 ))
               : booths.map((booth, i) => (
               <motion.div
@@ -265,10 +270,10 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06 }}
                 whileTap={{ scale: 0.97 }}
-                className="min-w-[160px] max-w-[160px] bg-soft-gray rounded-2xl overflow-hidden flex-shrink-0"
+                className="min-w-[140px] max-w-[140px] bg-soft-gray rounded-xl overflow-hidden flex-shrink-0"
               >
                 <Link to={`/booking/${booth.id}`} id={`booth-card-${booth.id}`}>
-                  <div className="h-[100px] relative">
+                  <div className="h-[95px] relative">
                     <img
                       src={booth.imageUrl}
                       alt={booth.name}
@@ -303,7 +308,7 @@ export default function Home() {
         </section>
 
         {/* ── Referral Progress Card ────────────────────────────────────── */}
-        <section className="bg-white mx-0 px-5 pt-5 pb-5">
+        <section className="bg-white mx-0 px-5 pt-4 pb-4">
           <Link to="/referral" id="home-referral-card">
             <motion.div
               whileTap={{ scale: 0.98 }}
